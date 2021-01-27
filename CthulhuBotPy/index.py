@@ -17,4 +17,6 @@ options = {
 }
 
 # eel.start('hello.html')
-eel.start('hello.html', mode='custom', cmdline_args=['node_modules/electron/dist/electron.exe', '.'])
+eel.start('loading.html', mode='custom', cmdline_args=['node_modules/electron/dist/electron.exe', '.'])
+eel.start('index.html', mode='custom', cmdline_args=['node_modules/electron/dist/electron.exe', '.'])
+# eel.start('goodbye.html', mode='custom', cmdline_args=['node_modules/electron/dist/electron.exe', '.'])

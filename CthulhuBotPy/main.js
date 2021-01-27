@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
+const path = require('path')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -8,15 +9,23 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
+    minWidth: 940,
+    minHeight: 500,
+    width: 940,
     height: 600,
+    frame: false,
+    backgroundColor: '#FFF',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'web/preload.js'),
+      enableRemoteModule: true
     }
   })
 
   // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:8000/hello.html');
+  mainWindow.loadURL('http://localhost:8000/index.html');
+
+  // mainWindow.loadURL('http://localhost:8000/goodbye.html');
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
@@ -33,7 +42,30 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.whenReady().then(() => {
+  const loadingWindow = new BrowserWindow({
+    frame: false,
+    height: 350,
+    width: 300,
+    movable: false,
+    backgroundColor: '#2c2f33'
+  })
+
+  loadingWindow.loadURL('http://localhost:8000/loading.html')
+  loadingWindow.setResizable(false)
+  loadingWindow.webContents.session.clearCache(function(){
+    console.log("Cache cleared.")
+  })
+  loadingWindow.show()
+
+  setTimeout(function(){
+    console.log("Finished loading.")
+    createWindow()
+
+    loadingWindow.close()
+  }, 5000)
+})
+// app.on('ready', createWindow)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://kit.fontawesome.com/95c81b836b.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="style.css">
+        <title>Hello, World!</title>
+        
+        <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
+        <script type="text/javascript" src="/eel.js"></script>
+        <script type="text/javascript">
+        
+        eel.expose(say_hello_js);               // Expose this function to Python
+        function say_hello_js(x) {
+            console.log("Hello from " + x);
+        }
+        
+        say_hello_js("Javascript World!");
+        eel.say_hello_py("Javascript World!");  // Call a Python function
+        
+        </script>
+    </head>
+    
+    <body>
+        <header id="titlebar">
+            <div id="drag-region">
+                <div id="window-title">
+                    <span id="botname" class="nameChange"></span>
+                </div>
+                    <div id="window-controls">
+                
+                    <div class="button" id="min-button">
+                        <img class="icon" srcset="Images/Icons/min-w-10.png 1x, Images/Icons/min-w-12.png 1.25x, Images/Icons/min-w-15.png 1.5x, Images/Icons/min-w-15.png 1.75x, Images/Icons/min-w-20.png 2x, Images/Icons/min-w-20.png 2.25x, Images/Icons/min-w-24.png 2.5x, Images/Icons/min-w-30.png 3x, Images/Icons/min-w-30.png 3.5x" draggable="false" />
+                    </div>
+                
+                    <div class="button" id="max-button">
+                        <img class="icon" srcset="Images/Icons/max-w-10.png 1x, Images/Icons/max-w-12.png 1.25x, Images/Icons/max-w-15.png 1.5x, Images/Icons/max-w-15.png 1.75x, Images/Icons/max-w-20.png 2x, Images/Icons/max-w-20.png 2.25x, Images/Icons/max-w-24.png 2.5x, Images/Icons/max-w-30.png 3x, Images/Icons/max-w-30.png 3.5x" draggable="false" />
+                    </div>
+                
+                    <div class="button" id="restore-button">
+                        <img class="icon" srcset="Images/Icons/max-w-10.png 1x, Images/Icons/max-w-12.png 1.25x, Images/Icons/max-w-15.png 1.5x, Images/Icons/max-w-15.png 1.75x, Images/Icons/max-w-20.png 2x, Images/Icons/max-w-20.png 2.25x, Images/Icons/max-w-24.png 2.5x, Images/Icons/max-w-30.png 3x, Images/Icons/max-w-30.png 3.5x" draggable="false" />
+                    </div>
+                
+                    <div class="button" id="close-button">
+                        <img class="icon" srcset="Images/Icons/close-w-10.png 1x, Images/Icons/close-w-12.png 1.25x, Images/Icons/close-w-15.png 1.5x, Images/Icons/close-w-15.png 1.75x, Images/Icons/close-w-20.png 2x, Images/Icons/close-w-20.png 2.25x, Images/Icons/close-w-24.png 2.5x, Images/Icons/close-w-30.png 3x, Images/Icons/close-w-30.png 3.5x" draggable="false" />
+                    </div>
+                </div>
+            </div>
+        </header>
+        <script src="renderer.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
