@@ -1,3 +1,6 @@
+// Duplicate of renderer.js; loaded at a different time
+// Required due to a weird bug or something
+
 // const remote = require('electron').remote;
 const { remote } = require('electron');
 const { BrowserWindow } = remote;
