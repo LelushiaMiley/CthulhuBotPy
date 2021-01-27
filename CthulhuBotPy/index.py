@@ -41,7 +41,7 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 	print(ctx.content)
 
 def runClient():
-    bot.run("NzUwNzU3MDAwMjk5OTM3OTM0.X0_K8Q.ObaaxVFmyw5d8w2Iw8_A0mqUWGE") # bot's token; will be ommitted from GitHub pushes
+    bot.run("TOKEN") # bot's token; will be ommitted from GitHub pushes
 
 threading.Thread(target=runClient).start()			# starts a thread for the bot as it doesn't seem to get along with Eel otherwise
 
