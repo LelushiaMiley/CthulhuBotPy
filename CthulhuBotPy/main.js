@@ -1,3 +1,11 @@
+// First loads "loading.html"
+// Will then display a login UI for the user to enter their bots credentials
+// If they already have, it will skip straight to the main UI
+// Once logged in, the main UI will be displayed
+// All windows close themselves once they are no longer needed. 
+// Loading screen is currently for visuals only, can be disabled if that is desired
+
+
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
@@ -28,7 +36,8 @@ function createWindow () {
   // mainWindow.loadURL('http://localhost:8000/goodbye.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // Usually only turned on during debugging and testing
+  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -65,6 +74,7 @@ app.whenReady().then(() => {
     loadingWindow.close()
   }, 5000)
 })
+// Disabled in favour of the above code
 // app.on('ready', createWindow)
 
 // Quit when all windows are closed.

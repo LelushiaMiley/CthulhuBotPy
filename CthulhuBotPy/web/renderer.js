@@ -1,3 +1,7 @@
+// Despite not actually working, throws an error at require, preload.js will,
+// for some odd reason, not function as intended without this file containing what it does.
+
+
 // const remote = require('electron').remote;
 const { remote } = require('electron');
 const { BrowserWindow } = remote;
