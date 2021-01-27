@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Loading</title>
+
+    <style>
+        body{
+            /* background-image: url('./Images/Icon/DiscordRotationConnecting.gif'); */
+            background: #2c2f33;
+            overflow: hidden;
+        }
+        .flex-container {
+            display: flex;
+            text-align: center;
+            /* width: 300px; */
+        }
+        .flex-container > .outer-divs {
+            /* background-color: red; */
+            height: 200px;
+            width: 50px;
+        }
+        #DiscordLoading {
+            margin-top: 50px;
+            background-image: url('./Images/Icons/DiscordRotationConnecting.gif');
+            background-size:contain;
+            background-repeat:no-repeat;
+            /* background-color:blueviolet; */
+            height: 200px;
+            width: 200px;
+        }
+        #loading {
+            width: 200px;
+            text-align: center;
+            /* margin-top: 20px; */
+            color: #FFF;
+            font-size: 26px;
+            /* font-weight:bold; */
+            /* font-family:  */
+            font-style:italic;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex-container">
+        <div class="outer-divs"></div>
+        <div id="DiscordLoading"></div>
+        <div class="outer-divs"></div>
+    </div>
+    <div class="flex-container">
+        <div class="outer-divs"></div>
+        <div id="loading">Loading...!</div>
+        <div class="outer-divs"></div>
+    </div>
+    
+</body>
+</html>
