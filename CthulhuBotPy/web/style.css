@@ -206,3 +206,7 @@ p {margin-top: 10px; color: rgba(255,255,255,0.4);}
     margin-top: 50px;
     background-color: #E81123;
 }
+
+textarea {
+    margin: 25px;
+}
