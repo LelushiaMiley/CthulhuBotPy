@@ -3,7 +3,7 @@
     <head>
         <script src="https://kit.fontawesome.com/95c81b836b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="style.css"> 
-        <title>Hello, World!</title>
+        <title>CthulhuBotPy</title>
         
         <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
         <script type="text/javascript" src="/eel.js"></script>
@@ -11,7 +11,9 @@
         
         eel.expose(say_hello_js);               // Expose this function to Python
         function say_hello_js(x) {
-            console.log("Hello from " + x);
+            // console.log("Hello from " + x);
+            // console.log(z);
+            // console.log(y);
         }
         
         say_hello_js("Javascript World!");
@@ -46,7 +48,67 @@
                 </div>
             </div>
         </header>
-        <textarea name="message_box" id="message_box" cols="30" rows="10"></textarea>
+
+        <div id="overallcontainer">
+            <div class="flex-container" id="serverBar">
+              <div id="serverContainer">
+                <div id="serverArea">
+                  <img id="discordServerBar" src="Images/Icons/DiscordRotationConnecting.gif"></img>
+                  <div id="lineBreak">
+      
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <div class="flex-container" id="channelBar">
+              <div class="fixed-top" id="channelTop">
+      
+              </div>
+              <div id="channelContainer">
+                <div id="channelArea">
+      
+                </div>
+              </div>
+              <div id="botArea">
+                
+              </div>
+            </div>
+            
+            <div class="flex-container" id="messageBar">
+                <div class="fixed-top" id="messageTop">
+                  
+                </div>
+
+                <div id="messageContainer">
+                    <div id="messageArea">
+                    </div>
+                    <div id="messageBox">
+                        <div id="message_left">
+                            <div id="attach">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                        </div>
+                        <div id="message_input">
+                            <textarea name="message_box" id="message_box" rows="1" spellcheck="true"></textarea>
+                        </div>
+                        <div id="message_right">
+                            <div id="gift">
+                                <i class="fas fa-gift fa-lg"></i>
+                            </div>
+                            <div id="gif">
+                                <i class="fas fa-image fa-lg"></i>
+                            </div>
+                            <div id="emoji" style="background-size: 242px 110px; margin-right:5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-container" id="userBar">
+                  
+            </div>
+        </div>
+        <!-- <textarea name="message_box" id="message_box" cols="" rows="10"></textarea> -->
         <script src="renderer.js"></script>
         <script src="index.js"></script>
     </body>

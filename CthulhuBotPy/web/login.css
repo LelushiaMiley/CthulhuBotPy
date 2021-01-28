@@ -1,0 +1,123 @@
+@font-face {
+    font-family: 'uni_sansheavy_italic_caps';
+    src: url('uni_sans_heavy_italic-webfont.woff2') format('woff2'),
+         url('uni_sans_heavy_italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+@font-face {
+    font-family: 'uni_sansheavy_caps';
+    src: url('uni_sans_heavy-webfont.woff2') format('woff2'),
+         url('uni_sans_heavy-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+@font-face {
+    font-family: 'uni_sansthin_italic_caps';
+    src: url('uni_sans_thin_italic-webfont.woff2') format('woff2'),
+         url('uni_sans_thin_italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+@font-face {
+    font-family: 'uni_sansthin_caps';
+    src: url('uni_sans_thin-webfont.woff2') format('woff2'),
+         url('uni_sans_thin-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+    display: flex;
+}
+
+.flex-container {
+    display: flex;
+    margin-top: 32px;
+    width: 25%;
+    height: 100%;
+    /* background-color: blue; */
+}
+
+#flex-down {
+    flex-direction: column;
+    text-align: center;
+    width: 50%;
+    /* line-height: 100%; */
+}
+
+#flex-down #topdiv {
+    height: 20%;
+}
+#flex-down #middlediv {
+    height: 30%;
+}
+#flex-down #bottomdiv {
+    margin-top: 20px;
+    height: 50%;
+}
+
+/* #flex-down .outer-divs {
+    /* background-color: red; 
+} */
+
+#loginHeader {
+    font-size: 56px;
+    color: #FFF;
+    /* font-style: italic; */
+    font-weight: bold;
+    
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+input[type=text]:focus, input[type=password]:focus {
+    border: 1px solid #555;
+}
+
+input[type=button] {
+    width: 100%;
+    background-color: #202225;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=button]:hover {
+    background-color: #1f2124;
+}
+
+input[type=button]:focus {
+    outline: none;
+    border: none;
+    background-color: #202225;
+}
