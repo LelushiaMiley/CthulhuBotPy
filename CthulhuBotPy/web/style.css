@@ -125,6 +125,7 @@ p {margin-top: 10px; color: rgba(255,255,255,0.4);}
     --icon: rgb(79,86,96);
     --icon-hover: rgb(6,6,7);
     --text-normal: rgb(46, 51, 56);
+    --channel-focused: rgb(212,215,220);
 }
 
 body {
@@ -462,16 +463,17 @@ body {
 }
 
 .category .categoryH1:hover {
-    color: #FFFFFF;
+    color: var(--text-normal);
     cursor: pointer;
 }
 
 .category div:hover {
     /* color: #FFFFFF; */
-    color: rgba(180,180,200,1);
+    color: var(--text-normal);
     /* background-color: rgba(52,55,60,1); */
     border-radius: 5px;
     cursor: pointer;
+    background-color: var(--channel-top-hover);
 }
 
 /* .category i:hover {
@@ -513,15 +515,15 @@ body {
 /* #<#644746838628499466> */
 
 .focused {
-    background-color: rgba(57,60,67,1) !important;
-    color: #FFFFFF !important;
+    background-color: var(--channel-focused) !important;
+    color: var(--text-normal) !important;
     border-radius: 5px !important;
     /* cursor: pointer; */
 }
 
 .focused:hover {
-    color: #FFFFFF !important;
-    background-color: rgba(57,60,67,1) !important;
+    color: var(--text-normal) !important;
+    background-color: var(--channel-focused) !important;
 }
 
 #messageArea div {
@@ -567,10 +569,10 @@ body {
 }
 
 #message_left {
-    padding: 15px 0px 15px 12px;
+    padding: 15px 0px 0px 12px;
     display:flex;
     /* background-color: red; */
-    width: 10%;
+    /* width: 10%; */
     height: 100%;
 }
 
@@ -597,7 +599,7 @@ body {
 }
 
 #message_right {
-    padding-top: 7px;
+    padding-top: 10px;
     display:flex;
     /* background-color: blue; */
     /* width: 80px; */
@@ -622,7 +624,7 @@ i:hover {
 
 #message_right div i {
     width: 30px;
-    height: 30px;
+    /* height: 30px; */
 }
 
 #emoji {
