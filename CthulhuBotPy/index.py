@@ -32,9 +32,25 @@ async def send_message(channel): 		# function to keep checking for a new message
 
 @bot.event								
 async def on_ready():					# function that triggers once the connection with the Discord API is in a "ready" state
-	channel_id = bot.guilds[3].text_channels[0].id
-	channel = bot.get_channel(channel_id)
+	channel_id = bot.guilds[2].text_channels[0].id
+	channel = bot.get_channel(ID)
 	bot.loop.create_task(send_message(channel)) # starts a new task, using the current loop; see send_message; will run until app's termination
+	guilds_bot_can_see = bot.guilds
+	names = []
+	icons = []
+	ids = []
+	for server in guilds_bot_can_see:
+		ids.append(server.id)
+		if server.icon == None:
+			icons.append(None)
+		else:
+			server_icon = "https://cdn.discordapp.com/icons/" + str(server.id) + "/" + (server.icon) + ".png"
+			icons.append(server_icon)
+		names.append(server.name)
+	print(names,icons,ids)
+	# eel.send_js_servers(names[0])
+	eel.send_js_servers(names,icons,ids)
+
 
 @bot.event
 async def on_message(ctx): 				# triggers every time a new message is sent in a channel the bot has access to

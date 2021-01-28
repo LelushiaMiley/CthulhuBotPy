@@ -9,10 +9,12 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
-
+fs = require('fs');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let loginWindow
+const iconPath = path.join(__dirname, "web/Images/Icons", "pink_discord.ico");
 
 function createWindow () {
   // Create the browser window.
@@ -27,11 +29,34 @@ function createWindow () {
       nodeIntegration: true,
       preload: path.join(__dirname, 'web/preload.js'),
       enableRemoteModule: true
-    }
+    },
+    icon: iconPath
+  })
+  loginWindow = new BrowserWindow({
+    minWidth: 940,
+    minHeight: 500,
+    width: 940,
+    height: 600,
+    frame: false,
+    backgroundColor: '#FFF',
+    webPreferences: {
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'web/preload.js'),
+      enableRemoteModule: true
+    },
+    icon: iconPath
   })
 
+  fs.readFile('user_info.txt','utf8',function (err,data) {
+    if(err) {
+      return console.log(err);
+    }
+    if(data != ""){
+      loginWindow.hide();
+      mainWindow.loadURL('http://localhost:8000/index.html');
+    }
+  });
   // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:8000/index.html');
 
   // mainWindow.loadURL('http://localhost:8000/goodbye.html');
 
@@ -57,7 +82,8 @@ app.whenReady().then(() => {
     height: 350,
     width: 300,
     movable: false,
-    backgroundColor: '#2c2f33'
+    backgroundColor: '#2c2f33',
+    icon: iconPath
   })
 
   loadingWindow.loadURL('http://localhost:8000/loading.html')
