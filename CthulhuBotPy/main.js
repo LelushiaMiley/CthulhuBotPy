@@ -82,7 +82,7 @@ app.whenReady().then(() => {
     height: 350,
     width: 300,
     movable: false,
-    backgroundColor: '#2c2f33',
+    backgroundColor: 'rgb(255,0,170)',
     icon: iconPath
   })
 

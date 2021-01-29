@@ -528,6 +528,7 @@ body {
 
 #messageArea div {
     padding: 15px 25px 15px 25px;
+    color: var(--text-normal);
 }
 
 #messageArea div:hover{
@@ -537,6 +538,16 @@ body {
 #messageArea img {
     max-height: 500px;
     max-width: 500px;
+}
+
+#messageArea .userPFP {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
+
+#messageArea span {
+    padding: 10px;
 }
 
 #messageBox {

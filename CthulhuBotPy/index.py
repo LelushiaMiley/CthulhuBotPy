@@ -31,6 +31,11 @@ def update_channel_id(channel_id):
 	message_channel_id = int(channel_id)
 
 @eel.expose
+def update_channel(channel):
+	global channel_for_message
+	channel_for_message = int(channel)
+
+@eel.expose
 def processServerClick(serverId):
 	guilds = bot.guilds
 	ids = []
@@ -64,16 +69,12 @@ def processServerClick(serverId):
 							second_temp_array = []
 	return processed_categories_and_channels
 
-async def send_message(channel): 		# function to keep checking for a new message to send; resets message once sent; non-blocking
+async def messages_to_see(): 		
 	while True:
-		global message_to_send
-		if message_to_send != "" and message_to_send != None:
-			await channel.send(message_to_send)
-			message_to_send = ""
 		global message_channel_id
 		if message_channel_id != "" and message_channel_id != None:
 			channel = bot.get_channel(int(message_channel_id))
-			messages = await channel.history(limit=200).flatten()
+			messages = await channel.history(limit=100).flatten()
 			final_message_array = []
 			temp_array = []
 			for message in messages:
@@ -81,30 +82,38 @@ async def send_message(channel): 		# function to keep checking for a new message
 				temp_array.append(str(message.author.id))
 				temp_array.append(str(message.id))
 				temp_array.append(message.author.display_name)
-				temp_array.append(str(color))
+				colour = "rgb(" + str(color[0]) + "," + str(color[1]) + "," + str(color[2]) + ")"
+				temp_array.append(colour)
 				temp_array.append(str(message.author.avatar_url))
 				temp_array.append(message.content)
+				if len(message.attachments) > 0:
+					temp_array.append(message.attachments)
+				else:
+					temp_array.append(None)
+				print(message.created_at)
+				temp_array.append(str(message.created_at))
 				final_message_array.append(temp_array)
 				temp_array = []
 			eel.send_message_data(final_message_array)
 			message_channel_id = ""
 		await asyncio.sleep(1)
 
-# async def messages_to_see():
-# 	while True:
-# 		global message_channel_id
-# 		if message_channel_id != "" and message_channel_id != None:
-# 			channel = bot.get_channel(int(message_channel_id))
-# 			messages = await channel.history(limit=200).flatten()
-# 			print(messages)
-# 			message_channel_id = ""
-# 		await asyncio.sleep(1)
+async def send_message(): # function to keep checking for a new message to send; resets message once sent; non-blocking
+	message_to_check = ""
+	while True:
+		global message_to_send
+		global channel_for_message
+		if message_to_send != "" and message_to_send != None and message_to_send != message_to_check:
+			channel = bot.get_channel(channel_for_message)
+			await channel.send(message_to_send)
+			message_to_send = ""
+			message_to_check = ""
+		await asyncio.sleep(.5)
 
 @bot.event								
 async def on_ready():					# function that triggers once the connection with the Discord API is in a "ready" state
-	channel = bot.get_channel(801952244072316960)
-	bot.loop.create_task(send_message(channel)) # starts a new task, using the current loop; see send_message; will run until app's termination
-	# bot.loop.create_task(messages_to_see)
+	message_loop = bot.loop.create_task(send_message()) # starts a new task, using the current loop; see send_message; will run until app's termination
+	bot.loop.create_task(messages_to_see())
 	guilds_bot_can_see = bot.guilds
 	names = []
 	icons = []
@@ -125,6 +134,19 @@ async def on_ready():					# function that triggers once the connection with the 
 @bot.event
 async def on_message(ctx): 				# triggers every time a new message is sent in a channel the bot has access to
 	print(ctx.content)
+	channel_id = str(ctx.channel.id)
+	if ctx.author == bot.user:
+		scroll = True
+	else:
+		scroll = False
+	if len(ctx.attachments) > 0:
+		message_attachments = ctx.attachments
+	else:
+		message_attachments = None
+	color = list(np.random.choice(range(256), size=3))
+	colour = "rgb(" + str(color[0]) + "," + str(color[1]) + "," + str(color[2]) + ")"
+	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,colour,str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(ctx.created_at)]
+	eel.new_message(message_array)
 
 def runClient():
     bot.run("TOKEN") # bot's token; will be omitted from GitHub pushes
