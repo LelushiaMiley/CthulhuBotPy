@@ -1,6 +1,11 @@
 document.getElementById('close-button').addEventListener("click", event => { // the triggerer for the broken Python function, will look into
     eel.sys_exit();
 });
+eel.expose(updateScroll);
+function updateScroll(){
+    var element = document.getElementById("messageContainer");
+    element.scrollTop = element.scrollHeight;
+}
 
 message = document.getElementById('message_box'); // declares a variable for the element to make it more accessible; avoids redundant code
 
@@ -8,6 +13,9 @@ message.addEventListener("keyup", function(event){  // listens for when keypress
     if(event.keyCode === 13) { // triggers from the key "Enter"
         message_to_send = message.value; // asigns the element's value to a variable
         event.preventDefault(); // does not work; meant to prevent "Enter" from doing anything but what it's told to here
+        var message_box = document.getElementById('message_box');
+        message_box.style.height = "40px";
+        message_box.setAttribute("style", "height: 40px;");
         eel.update_message(message_to_send); // triggers a function on the Python end; sends the variable, too
         message.value = ""; // resets the text in the element
     }
@@ -34,6 +42,13 @@ function init () {
     function delayedResize () {
         window.setTimeout(resize, 0);
     }
+    message_box.addEventListener('keydown', function (event){
+        if(event.code == "Enter"){
+            event.preventDefault();
+            message_box.style.height = "40px";
+            message_box.setAttribute("style", "height: 40px;");
+        }
+    })
     message_box.addEventListener('change', resize);
     message_box.addEventListener('cut', delayedResize);
     message_box.addEventListener('paste', delayedResize);
@@ -80,6 +95,10 @@ function processChannel(all_data){
     while(textChannel[0]){
         textChannel[0].parentNode.removeChild(textChannel[0])
     }
+    var remove_messages = document.getElementsByClassName("messages");
+    while(remove_messages[0]){
+        remove_messages[0].parentNode.removeChild(remove_messages[0])
+    }
     for(var i=0;i<all_data.length;i++){
         for(var z=0;z<all_data[i].length;z++){
             var id = all_data[i][0][0];
@@ -107,7 +126,11 @@ function processChannel(all_data){
                 var channel = document.createElement("DIV");
                 if(z==1 && i==0){
                     channel.setAttribute("class", "text-channel focused");
+                    var placeholder = document.getElementById("message_box");
+                    var placeholder_string = "Message #" + all_data[i][z][1];
+                    placeholder.setAttribute("placeholder", placeholder_string);
                     eel.update_channel_id(String(all_data[i][z][0]));
+                    eel.update_channel(String(all_data[i][z][0]));
                 } else{
                     channel.setAttribute("class", "text-channel");
                 }
@@ -116,6 +139,24 @@ function processChannel(all_data){
                 append_to_category.appendChild(channel);
             }
         }
+    }
+    var text_channels = document.querySelectorAll(".text-channel");
+    for(var i=0;i<text_channels.length;i++){
+        text_channels[i].addEventListener("click", function(event){
+            channel_id = event.target.id;
+            var remove_focus = document.querySelector(".focused");
+            remove_focus.classList.remove("focused");
+            event.target.classList.add("focused");
+            var placeholder = document.getElementById("message_box");
+            var placeholder_string = "Message " + event.target.innerText;
+            placeholder.setAttribute("placeholder", placeholder_string);
+            var remove_messages = document.getElementsByClassName("messages");
+            while(remove_messages[0]){
+                remove_messages[0].parentNode.removeChild(remove_messages[0])
+            }
+            eel.update_channel_id(channel_id);
+            eel.update_channel(channel_id);
+        });
     }
 }
 
@@ -145,7 +186,7 @@ function send_js_servers(names,icons,ids){
             var remove_focus = document.querySelector(".serverFocused");
             remove_focus.classList.remove("serverFocused");
             event.target.classList.add("serverFocused");
-            console.log(serverId)
+            // console.log(serverId)
             eel.processServerClick(serverId)(processChannel);
             // (processChannel)
         });
@@ -158,5 +199,77 @@ function send_js_servers(names,icons,ids){
 
 eel.expose(send_message_data);
 function send_message_data(message_data){
-    console.log(message_data);
+    var remove_messages = document.getElementsByClassName("messages");
+    while(remove_messages[0]){
+        remove_messages[0].parentNode.removeChild(remove_messages[0])
+    }
+    for(var i=message_data.length-1;i>-1;i--){
+        var message = document.createElement("DIV");
+        message.setAttribute("class", "messages");
+        message.setAttribute("id",message_data[i][1]);
+        var messageArea = document.getElementById("messageArea");
+        messageArea.appendChild(message);
+        var message = document.getElementById(message_data[i][1]);
+        var pfp = document.createElement("IMG");
+        pfp.setAttribute("src", message_data[i][4]);
+        pfp.setAttribute("class","userPFP");
+        var author = document.createElement("span");
+        author.setAttribute("class","messages messageUser");
+        color = message_data[i][3];
+        console.log(color);
+        author.setAttribute("style", "color: " + color);
+        author.innerText = message_data[i][2];
+        content = document.createElement("span");
+        content.setAttribute("class","messages messageContent");
+        content.innerText = message_data[i][5];
+        time = document.createElement("span");
+        time.setAttribute("class", "messages messageTime");
+        time.innerText = message_data[i][7];
+        message.appendChild(pfp);
+        message.appendChild(author);
+        message.appendChild(content);
+        message.appendChild(time);
+    }
+    updateScroll();
+}
+
+eel.expose(new_message);
+function new_message(message_data){
+    var focused_channel = document.querySelector(".focused");
+    if(focused_channel.id == message_data[6]){
+        var message = document.createElement("DIV");
+        message.setAttribute("class", "messages");
+        message.setAttribute("id",message_data[1]);
+        var messageArea = document.getElementById("messageArea");
+        messageArea.appendChild(message);
+        var message = document.getElementById(message_data[1]);
+        var pfp = document.createElement("IMG");
+        pfp.setAttribute("src", message_data[4]);
+        pfp.setAttribute("class","userPFP");
+        var author = document.createElement("span");
+        author.setAttribute("class","messages messageUser");
+        color = message_data[3];
+        console.log(color);
+        author.setAttribute("style", "color: " + color);
+        author.innerText = message_data[2];
+        content = document.createElement("span");
+        content.setAttribute("class","messages messageContent");
+        content.innerText = message_data[5];
+        time = document.createElement("span");
+        time.setAttribute("class", "messages messageTime");
+        time.innerText = message_data[7];
+        message.appendChild(pfp);
+        message.appendChild(author);
+        message.appendChild(content);
+        message.appendChild(time);
+        var element = document.getElementById("messageContainer");
+        console.log(element.scrollTop);
+        console.log(element.scrollHeight);
+        if(message_data[8]){
+            updateScroll();
+        } else if(element.scrollTop > element.scrollHeight-600){
+            updateScroll();
+        }
+        // updateScroll();
+    }
 }
