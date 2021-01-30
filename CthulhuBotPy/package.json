@@ -1,20 +1,16 @@
 {
-  "name": "Eelectron-quick-start",
+  "name": "cthulhubotpy",
   "version": "1.0.0",
-  "description": "A minimal Eelectron application",
+  "description": "Discord for bots.",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/LelushiaMiley/CthulhuBotPy",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "CthulhuBotPy"
   ],
-  "author": "GitHub",
+  "author": "Lelushia Miley",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^7.2.4"
