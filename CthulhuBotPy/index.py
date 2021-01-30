@@ -1,6 +1,7 @@
 prefix = "Cthulhu " # Declare the prefix for the bot
 
 # Imports
+import datetime
 import numpy as np
 import difflib
 import eel
@@ -12,13 +13,15 @@ from discord.ext.commands import Bot
 import asyncio
 
 # Code
-
-bot = commands.Bot(command_prefix=prefix)		# declare the client (bot) and set its prefix; see beginning of file
+intents = discord.Intents().all()
+bot = commands.Bot(command_prefix=prefix, intents=intents)		# declare the client (bot) and set its prefix; see beginning of file
 
 global message_to_send			# declare a global variable that will be used to track the message that needs to be sent
 message_to_send = ""
 global message_channel_id
 message_channel_id = ""
+global message_sender
+message_sender = []
 
 @eel.expose
 def update_message(message):	# exposed function; gets triggered on the frontend and updates the global variable with the message passed over from JS
@@ -78,20 +81,50 @@ async def messages_to_see():
 			final_message_array = []
 			temp_array = []
 			for message in messages:
+				server = message.guild.id
+				members = bot.get_guild(server).members
+				for member in members:
+					if member.id == message.author.id:
+						member_colour = member.colour
 				color = list(np.random.choice(range(256), size=3))
 				temp_array.append(str(message.author.id))
 				temp_array.append(str(message.id))
 				temp_array.append(message.author.display_name)
 				colour = "rgb(" + str(color[0]) + "," + str(color[1]) + "," + str(color[2]) + ")"
-				temp_array.append(colour)
+				temp_array.append(str(member_colour))
 				temp_array.append(str(message.author.avatar_url))
 				temp_array.append(message.content)
 				if len(message.attachments) > 0:
 					temp_array.append(message.attachments)
 				else:
 					temp_array.append(None)
-				print(message.created_at)
-				temp_array.append(str(message.created_at))
+				if message.created_at.day == datetime.datetime.now().day:
+					hour_var = message.created_at.hour
+					minute_var = message.created_at.minute
+					if hour_var < 10:
+						hour = "0" + str(hour_var)
+					else:
+						hour = str(hour_var)
+					if minute_var < 10:
+						minute = "0" + str(minute_var)
+					else:
+						minute = str(minute_var)
+					date = "Today at " + hour + ":" + minute
+				elif message.created_at.day == datetime.datetime.now().day - 1 or datetime.datetime.now().day - 1 < 1:
+					hour_var = message.created_at.hour
+					minute_var = message.created_at.minute
+					if hour_var < 10:
+						hour = "0" + str(hour_var)
+					else:
+						hour = str(hour_var)
+					if minute_var < 10:
+						minute = "0" + str(minute_var)
+					else:
+						minute = str(minute_var)
+					date = "Yesterday at " + hour + ":" + minute
+				else:
+					date = str(str(message.created_at.year) + "/" + str(message.created_at.month) + "/" + str(message.created_at.day))
+				temp_array.append(str(date))
 				final_message_array.append(temp_array)
 				temp_array = []
 			eel.send_message_data(final_message_array)
@@ -126,8 +159,6 @@ async def on_ready():					# function that triggers once the connection with the 
 			server_icon = "https://cdn.discordapp.com/icons/" + str(server.id) + "/" + (server.icon) + ".png"
 			icons.append(server_icon)
 		names.append(server.name)
-	# print(names,icons,ids)
-	# eel.send_js_servers(names[0])
 	eel.send_js_servers(names,icons,ids)
 
 
@@ -145,7 +176,19 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 		message_attachments = None
 	color = list(np.random.choice(range(256), size=3))
 	colour = "rgb(" + str(color[0]) + "," + str(color[1]) + "," + str(color[2]) + ")"
-	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,colour,str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(ctx.created_at)]
+	hour_var = ctx.created_at.hour
+	minute_var = ctx.created_at.minute
+	if hour_var < 10:
+		hour = "0" + str(hour_var)
+	else:
+		hour = str(hour_var)
+	if minute_var < 10:
+		minute = "0" + str(minute_var)
+	else:
+		minute = str(minute_var)
+	date = "Today at " + hour + ":" + minute
+	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,colour,str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(date)]
+
 	eel.new_message(message_array)
 
 def runClient():

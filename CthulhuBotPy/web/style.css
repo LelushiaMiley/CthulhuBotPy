@@ -126,6 +126,12 @@ p {margin-top: 10px; color: rgba(255,255,255,0.4);}
     --icon-hover: rgb(6,6,7);
     --text-normal: rgb(46, 51, 56);
     --channel-focused: rgb(212,215,220);
+    --date-color: rgb(116, 127, 141);
+    --hashtag-colour: rgb(116,127,141);
+}
+
+::placeholder {
+    text-overflow: ellipsis!important;
 }
 
 body {
@@ -239,7 +245,8 @@ body {
 
 #window-title span {
     overflow: hidden;
-    text-overflow: ellipsis;
+    white-space:nowrap;
+    text-overflow: ellipsis!important;
     white-space: nowrap;
     line-height: 1.5;
 }
@@ -363,6 +370,8 @@ body {
 }
 
 #messageArea {
+    font-weight: 400;
+    font-family: "Segoe UI", sans-serif;
     color: #dcddde;
     overflow-x: hidden;
     /* background-image: linear-gradient(red, yellow); */
@@ -444,7 +453,7 @@ body {
 .category div {
     /* padding-top: 5px; Was 10px
     padding-left: 15px; Was 15px */
-    padding: 5px 0px 5px 15px;
+    padding: 7px 0px 7px 15px;
     margin-left: 10px;
     display: flex;
     flex-direction: row;
@@ -459,6 +468,7 @@ body {
 }
 
 .category h1 {
+    padding-left: 5px;
     margin: 0px !important;
 }
 
@@ -469,11 +479,26 @@ body {
 
 .category div:hover {
     /* color: #FFFFFF; */
-    color: var(--text-normal);
+    /* color: var(--text-normal); */
     /* background-color: rgba(52,55,60,1); */
     border-radius: 5px;
     cursor: pointer;
     background-color: var(--channel-top-hover);
+}
+
+.category div:hover span {
+    color: var(--text-normal);
+}
+
+.chanel_hashtag {
+    color: var(--hashtag-colour)!important;
+    font-size: 1em!important;
+}
+
+.channel_name {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis!important;
 }
 
 /* .category i:hover {
@@ -520,6 +545,9 @@ body {
     border-radius: 5px !important;
     /* cursor: pointer; */
 }
+.focused i {
+    color: var(--hashtag-colour)!important;
+}
 
 .focused:hover {
     color: var(--text-normal) !important;
@@ -531,9 +559,9 @@ body {
     color: var(--text-normal);
 }
 
-#messageArea div:hover{
+/* #messageArea div:hover{
     background-color: var(--message-hover);
-}
+} */
 
 #messageArea img {
     max-height: 500px;
@@ -541,13 +569,81 @@ body {
 }
 
 #messageArea .userPFP {
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
 }
 
-#messageArea span {
-    padding: 10px;
+#messageArea .userPFP:hover {
+    cursor: pointer;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.08));
+}
+
+.messages div {
+    padding: 0px;
+}
+
+.messages {padding: 0px!important;margin-bottom: 15px!important;}
+
+.messages:hover{
+    background-color: var(--message-hover);
+}
+
+.user_left {
+    vertical-align: top;
+    display:inline-block;
+    padding:0px!important;
+    width: 60px;
+    height: 50px;
+}
+
+.addition_left {
+    vertical-align: top;
+    display:inline-block;
+    padding:0px!important;
+    width: 60px;
+    height: 10px;
+}
+
+.user_right {
+    display:inline-block;
+    width: calc(100% - 60px);
+    padding:0px 0px 0px 0px !important;
+}
+
+.user_icon {
+    padding:5px!important;
+    padding-left: 15px!important;
+    height: 100%;
+    width: 50px;
+}
+
+.user_and_time {
+    padding: 3px !important;
+    display:block;
+}
+
+.user_and_time .messageUser:hover {
+    cursor: pointer;
+}
+
+.user_and_time span {
+    padding: 5px 0px 0px 0px!important;
+    margin:5px;
+}
+
+.user_and_time .messageTime {
+    font-size: 12px;
+    color: var(--date-color);
+}
+
+.user_and_time .messageTime:hover {
+    cursor:default;
+}
+
+.user_content {
+    display:block;
+    padding: 5px 25px 2px 10px !important;
 }
 
 #messageBox {
@@ -595,6 +691,8 @@ body {
 }
 
 #message_input textarea {
+    overflow:hidden;
+    white-space:nowrap;
     padding-top: 12px;
     font-size: 17px;
     padding: 10px;
@@ -617,11 +715,11 @@ body {
     height: 100%;
 }
 
-i {
+/* i {
     color: var(--icon);
-}
+} */
 i:hover {
-    color: var(--icon-hover);
+    /* color: var(--icon-hover); */
     cursor: pointer;
 }
 
@@ -636,6 +734,30 @@ i:hover {
 #message_right div i {
     width: 30px;
     /* height: 30px; */
+}
+
+#attach {
+    color: var(--icon);
+}
+
+#gift {
+    color: var(--icon);
+}
+
+#gif {
+    color: var(--icon);
+}
+
+#attach:hover {
+    color: var(--icon-hover);
+}
+
+#gift:hover {
+    color: var(--icon-hover);
+}
+
+#gif:hover {
+    color: var(--icon-hover);
 }
 
 #emoji {
@@ -682,3 +804,4 @@ canvas {
 .hideThis {
     display: none !important;
 }
+

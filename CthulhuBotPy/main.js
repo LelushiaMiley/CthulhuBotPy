@@ -70,6 +70,7 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
+    app.quit();
   })
 }
 
@@ -94,10 +95,9 @@ app.whenReady().then(() => {
   loadingWindow.show()
 
   setTimeout(function(){
-    console.log("Finished loading.")
-    createWindow()
-
-    loadingWindow.close()
+    console.log("Finished loading.");
+    createWindow();
+    loadingWindow.close();
   }, 5000)
 })
 // Disabled in favour of the above code
@@ -107,7 +107,7 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') app.quit()
+  app.quit()
 })
 
 app.on('activate', function () {
