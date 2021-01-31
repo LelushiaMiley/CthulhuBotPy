@@ -82,6 +82,190 @@ function emojiManipulation(){
 }
 emoji.addEventListener("mouseover", emojiManipulation)
 
+eel.expose(update_member_list_js);
+function update_member_list_js(all_member_data){
+    try{
+        var remove_online = document.getElementById("online");
+        var remove_offline = document.getElementById("offline");
+        remove_online.innerHTML = '';
+        remove_offline.innerHTML = '';
+    }
+    catch{
+        console.log("Does not exist yet.");
+    }
+    var memberArea = document.getElementById("memberArea");
+    for(i=0;i<all_member_data.length;i++){
+        var new_member = document.createElement("DIV");
+        if(all_member_data[i][3] == "online" || all_member_data[i][3] == "idle" || all_member_data[i][3] == "dnd"){
+            var online_check = document.getElementById("online");
+            if(online_check){
+                if(all_member_data[i][5] != 0){
+                    var role_check = document.getElementById(all_member_data[i][5]);
+                    if(role_check){
+                        if(document.getElementById("member-" + all_member_data[i][0])){
+                            continue;
+                        } else {
+                            new_member.setAttribute("class", "member");
+                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
+                            role_check.appendChild(new_member);
+                            member_left = document.createElement("DIV");
+                            member_right = document.createElement("DIV");
+                            member_left.setAttribute("class", "member_left");
+                            member_right.setAttribute("class", "member_right");
+                            new_member.appendChild(member_left);
+                            new_member.appendChild(member_right);
+                            user = document.createElement("DIV");
+                            user.setAttribute("class", "member_name");
+                            user.setAttribute("style", "color: " + all_member_data[i][2]);
+                            user.innerText = all_member_data[i][1];
+                            member_PFP = document.createElement("IMG");
+                            member_PFP.setAttribute("class", "member_PFP");
+                            member_PFP.setAttribute("src", all_member_data[i][4]);
+                            status_ = document.createElement("DIV");
+                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
+                            inner_left = document.createElement("DIV");
+                            inner_left.setAttribute("class", "inner_left");
+                            member_left.appendChild(inner_left);
+                            inner_left.appendChild(member_PFP);
+                            member_right.appendChild(user);
+                            inner_left.appendChild(status_);
+                        }
+                    } else {
+                        if(document.getElementById("member-" + all_member_data[i][0])){
+                            continue;
+                        } else {
+                            var role = document.createElement("DIV");
+                            role.setAttribute("class", "role_list");
+                            role.setAttribute("id", all_member_data[i][5]);
+                            // role.innerText = all_member_data[i][5];
+                            online_check.appendChild(role);
+                            role_name = document.createElement("DIV");
+                            role_name.setAttribute("class","role_name");
+                            role_name.innerText = all_member_data[i][5];
+                            role.appendChild(role_name);
+                            new_member.setAttribute("class", "member");
+                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
+                            role.appendChild(new_member);
+                            member_left = document.createElement("DIV");
+                            member_right = document.createElement("DIV");
+                            member_left.setAttribute("class", "member_left");
+                            member_right.setAttribute("class", "member_right");
+                            new_member.appendChild(member_left);
+                            new_member.appendChild(member_right);
+                            user = document.createElement("DIV");
+                            user.setAttribute("class", "member_name");
+                            user.setAttribute("style", "color: " + all_member_data[i][2]);
+                            user.innerText = all_member_data[i][1];
+                            member_PFP = document.createElement("IMG");
+                            member_PFP.setAttribute("class", "member_PFP");
+                            member_PFP.setAttribute("src", all_member_data[i][4]);
+                            status_ = document.createElement("DIV");
+                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
+                            inner_left = document.createElement("DIV");
+                            inner_left.setAttribute("class", "inner_left");
+                            member_left.appendChild(inner_left);
+                            inner_left.appendChild(member_PFP);
+                            member_right.appendChild(user);
+                            inner_left.appendChild(status_);
+                        }
+                    }
+                }
+            } else {
+                if(document.getElementById("member-" + all_member_data[i][0])){
+                    continue;
+                } else {
+                    if(all_member_data[i][5] != 0){
+                        var role_check = document.getElementById(all_member_data[i][5]);
+                        if(role_check){
+                            var online = document.createElement("DIV");
+                            online.setAttribute("id", "online");
+                            online.innerText = "Online";
+                            online.setAttribute("style", "color: rgb(46, 51, 56);");
+                            memberArea.appendChild(online);
+                            online.appendChild(role);
+                            new_member.setAttribute("class", "member");
+                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
+                            role.appendChild(new_member);
+                            member_left = document.createElement("DIV");
+                            member_right = document.createElement("DIV");
+                            member_left.setAttribute("class", "member_left");
+                            member_right.setAttribute("class", "member_right");
+                            new_member.appendChild(member_left);
+                            new_member.appendChild(member_right);
+                            user = document.createElement("DIV");
+                            user.setAttribute("class", "member_name");
+                            user.setAttribute("style", "color: " + all_member_data[i][2]);
+                            user.innerText = all_member_data[i][1];
+                            member_PFP = document.createElement("IMG");
+                            member_PFP.setAttribute("class", "member_PFP");
+                            member_PFP.setAttribute("src", all_member_data[i][4]);
+                            status_ = document.createElement("DIV");
+                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
+                            inner_left = document.createElement("DIV");
+                            inner_left.setAttribute("class", "inner_left");
+                            member_left.appendChild(inner_left);
+                            inner_left.appendChild(member_PFP);
+                            member_right.appendChild(user);
+                            inner_left.appendChild(status_);
+                        } else {
+                            console.log("RAWR");
+                            var online = document.createElement("DIV");
+                            online.setAttribute("id", "online");
+                            online.setAttribute("style", "color: rgb(46, 51, 56); font-weight: 700px;");
+                            memberArea.appendChild(online);
+                            online_name = document.createElement("DIV");
+                            online_name.innerText = "ONLINE";
+                            online_name.setAttribute("id", "online_name");
+                            online.appendChild(online_name);
+                            var role = document.createElement("DIV");
+                            role.setAttribute("class", "role_list");
+                            role.setAttribute("id", all_member_data[i][5]);
+                            // role.innerText = all_member_data[i][5];
+                            online.appendChild(role);
+                            role_name = document.createElement("DIV");
+                            role_name.setAttribute("class","role_name");
+                            role_name.innerText = all_member_data[i][5];
+                            role.appendChild(role_name);
+                            new_member.setAttribute("class", "member");
+                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
+                            role.appendChild(new_member);
+                            member_left = document.createElement("DIV");
+                            member_right = document.createElement("DIV");
+                            member_left.setAttribute("class", "member_left");
+                            member_right.setAttribute("class", "member_right");
+                            new_member.appendChild(member_left);
+                            new_member.appendChild(member_right);
+                            user = document.createElement("DIV");
+                            user.setAttribute("class", "member_name");
+                            user.setAttribute("style", "color: " + all_member_data[i][2]);
+                            user.innerText = all_member_data[i][1];
+                            member_PFP = document.createElement("IMG");
+                            member_PFP.setAttribute("class", "member_PFP");
+                            member_PFP.setAttribute("src", all_member_data[i][4]);
+                            status_ = document.createElement("DIV");
+                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
+                            inner_left = document.createElement("DIV");
+                            inner_left.setAttribute("class", "inner_left");
+                            member_left.appendChild(inner_left);
+                            inner_left.appendChild(member_PFP);
+                            member_right.appendChild(user);
+                            inner_left.appendChild(status_);
+                        }
+                    }
+                }
+            }
+        } else {
+            var offline_check = document.getElementById("offline");
+            if(offline_check){
+
+            } else {
+                var offline = document.createElement("DIV");
+            }
+        }
+    }
+}
+
+
 function processChannel(all_data){
     console.log(all_data);
     console.log(all_data[0]);
@@ -131,6 +315,7 @@ function processChannel(all_data){
                     placeholder.setAttribute("placeholder", placeholder_string);
                     eel.update_channel_id(String(all_data[i][z][0]));
                     eel.update_channel(String(all_data[i][z][0]));
+                    eel.update_member_list(all_data[i][z][0]);
                 } else{
                     channel.setAttribute("class", "text-channel");
                 }
@@ -147,6 +332,9 @@ function processChannel(all_data){
             }
         }
     }
+
+
+
     var text_channels = document.querySelectorAll(".text-channel");
     for(var i=0;i<text_channels.length;i++){
         text_channels[i].addEventListener("click", function(event){
@@ -171,6 +359,7 @@ function processChannel(all_data){
                     }
                     eel.update_channel_id(channel_id);
                     eel.update_channel(channel_id);
+                    eel.update_member_list(channel_id);
                 }
             }
         },true);

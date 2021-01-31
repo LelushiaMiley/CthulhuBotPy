@@ -1,1 +1,1 @@
-python index.py
+python CthulhuBot.py

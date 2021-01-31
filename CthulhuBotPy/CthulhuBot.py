@@ -72,6 +72,58 @@ def processServerClick(serverId):
 							second_temp_array = []
 	return processed_categories_and_channels
 
+@eel.expose
+def update_member_list(channel_id):
+	channel = bot.get_channel(int(channel_id))
+	roles = channel.guild.roles
+	members = channel.members
+	all_member_data = []
+	member_data = []
+	for role in reversed(roles):
+		if role.hoist:
+			for member in role.members:
+				if member in members:
+					# print(str(member.activity))
+					member_data.append(str(member.id))
+					member_data.append(str(member.display_name))
+					member_data.append(str(member.colour))
+					member_data.append(str(member.status))
+					member_data.append(str(member.avatar_url))
+					member_data.append(str(role))
+					all_member_data.append(member_data)
+					member_data = []
+	if len(all_member_data) > 0:
+		for member in members:
+			if len(member.roles) < 1:
+				member_data.append(str(member.id))
+				member_data.append(str(member.display_name))
+				member_data.append(str(member.colour))
+				member_data.append(str(member.status))
+				member_data.append(str(member.avatar_url))
+				member_data.append(0)
+				all_member_data.append(member_data)
+				member_data = []
+	else:
+		for member in members:
+			hoist_or_not = 0
+			roles = member.roles
+			for role in roles:
+				if role.hoist:
+					hoist_or_not = 1
+			if hoist_or_not != 1:
+				member_data.append(str(member.id))
+				member_data.append(str(member.display_name))
+				member_data.append(str(member.colour))
+				member_data.append(str(member.status))
+				member_data.append(str(member.avatar_url))
+				member_data.append(0)
+				all_member_data.append(member_data)
+				member_data = []
+				hoist_or_not = 0
+	# print(all_member_data)
+	eel.update_member_list_js(all_member_data)
+
+
 async def messages_to_see(): 		
 	while True:
 		global message_channel_id
@@ -86,6 +138,9 @@ async def messages_to_see():
 				for member in members:
 					if member.id == message.author.id:
 						member_colour = member.colour
+						break
+					else:
+						member_colour = "#000000"
 				color = list(np.random.choice(range(256), size=3))
 				temp_array.append(str(message.author.id))
 				temp_array.append(str(message.id))

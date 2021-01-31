@@ -128,11 +128,15 @@ p {margin-top: 10px; color: rgba(255,255,255,0.4);}
     --channel-focused: rgb(212,215,220);
     --date-color: rgb(116, 127, 141);
     --hashtag-colour: rgb(116,127,141);
+    --online: rgb(67,181,129);
+    --idle: rgb(250,166,26);
+    --dnd: rgb(240,71,71);
+    --offline: rgb(116,127,141);
 }
 
-::placeholder {
+/* ::placeholder {
     text-overflow: ellipsis!important;
-}
+} */
 
 body {
     line-height: 1;
@@ -295,10 +299,18 @@ body {
     background-color: var(--message-bar);
 }
 #overallcontainer #userBar {
+    /* overflow-y: scroll!important; */
+    overflow-x: hidden;
     width: 232px;
     /* width: 24.680851063%; */
     height: 100%;
     background-color: var(--user-bar);
+}
+
+#memberContainer {
+    overflow-y: scroll!important;
+    margin-top:70px;
+    height: calc(100% - 70px);
 }
 
 .fixed-top {
@@ -691,8 +703,6 @@ body {
 }
 
 #message_input textarea {
-    overflow:hidden;
-    white-space:nowrap;
     padding-top: 12px;
     font-size: 17px;
     padding: 10px;
@@ -805,3 +815,86 @@ canvas {
     display: none !important;
 }
 
+#memberArea {
+    overflow-x: hidden;
+    cursor: default!important;
+}
+
+.member_PFP {
+    width: 35px;
+    height:35px;
+    border-radius: 50%;
+}
+
+.member {
+    padding:5px 5px 0px 5px;
+}
+
+.member:hover {
+    background-color:var(--channel-top-hover);
+    cursor: pointer!important;
+    border-radius: 5px;
+}
+
+.member_left {
+    width: 50px;
+    display: inline-block;
+}
+
+.inner_left {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.inner_left .member_PFP,
+.inner_left .member_status {
+    /* width:100%; */
+    flex:none;
+}
+
+.member_right {
+    width: 159px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#online {
+    padding:5px;
+}
+
+#online_name {
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 700!important;
+}
+
+.role_name {
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 700!important;
+}
+
+.member_status {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    border: 3px solid var(--user-bar);
+    margin-left: -30%;
+    margin-top: 45%;
+}
+
+.online {
+    background-color: var(--online);
+}
+
+.idle {
+    background-color: var(--idle);
+}
+
+.dnd {
+    background-color: var(--dnd);
+}
+
+.offline {
+    background-color: var(--offline);
+}
