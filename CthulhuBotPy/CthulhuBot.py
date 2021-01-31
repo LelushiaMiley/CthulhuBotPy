@@ -93,33 +93,26 @@ def update_member_list(channel_id):
 					all_member_data.append(member_data)
 					member_data = []
 	if len(all_member_data) > 0:
+		print("Hello!")
 		for member in members:
-			if len(member.roles) < 1:
-				member_data.append(str(member.id))
-				member_data.append(str(member.display_name))
-				member_data.append(str(member.colour))
-				member_data.append(str(member.status))
-				member_data.append(str(member.avatar_url))
-				member_data.append(0)
-				all_member_data.append(member_data)
-				member_data = []
+			member_data.append(str(member.id))
+			member_data.append(str(member.display_name))
+			member_data.append(str(member.colour))
+			member_data.append(str(member.status))
+			member_data.append(str(member.avatar_url))
+			member_data.append(0)
+			all_member_data.append(member_data)
+			member_data = []
 	else:
 		for member in members:
-			hoist_or_not = 0
-			roles = member.roles
-			for role in roles:
-				if role.hoist:
-					hoist_or_not = 1
-			if hoist_or_not != 1:
-				member_data.append(str(member.id))
-				member_data.append(str(member.display_name))
-				member_data.append(str(member.colour))
-				member_data.append(str(member.status))
-				member_data.append(str(member.avatar_url))
-				member_data.append(0)
-				all_member_data.append(member_data)
-				member_data = []
-				hoist_or_not = 0
+			member_data.append(str(member.id))
+			member_data.append(str(member.display_name))
+			member_data.append(str(member.colour))
+			member_data.append(str(member.status))
+			member_data.append(str(member.avatar_url))
+			member_data.append(0)
+			all_member_data.append(member_data)
+			member_data = []
 	# print(all_member_data)
 	eel.update_member_list_js(all_member_data)
 
@@ -198,10 +191,18 @@ async def send_message(): # function to keep checking for a new message to send;
 			message_to_check = ""
 		await asyncio.sleep(.5)
 
+async def update_member_bar():
+	await asyncio.sleep(5)
+	while True:
+		global channel_for_message
+		update_member_list(channel_for_message)
+		await asyncio.sleep(5)
+
 @bot.event								
 async def on_ready():					# function that triggers once the connection with the Discord API is in a "ready" state
 	message_loop = bot.loop.create_task(send_message()) # starts a new task, using the current loop; see send_message; will run until app's termination
 	bot.loop.create_task(messages_to_see())
+	bot.loop.create_task(update_member_bar())
 	guilds_bot_can_see = bot.guilds
 	names = []
 	icons = []
@@ -247,7 +248,7 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 	eel.new_message(message_array)
 
 def runClient():
-    bot.run("TOKEN") # bot's token; will be omitted from GitHub pushes
+    bot.run("") # bot's token; will be omitted from GitHub pushes
 
 threading.Thread(target=runClient).start()			# starts a thread for the bot as it doesn't seem to get along with Eel otherwise
 

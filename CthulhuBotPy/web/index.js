@@ -82,186 +82,169 @@ function emojiManipulation(){
 }
 emoji.addEventListener("mouseover", emojiManipulation)
 
+// member_data:
+// 0 - user id
+// 1 - user name
+// 2 - display colour
+// 3 - online/offline
+// 4 - PFP URL
+// 5 - role/0
+
+// role_check:
+// 0 - no role/not needed
+// 1 - has role
+
+// presence:
+// 0 - offline
+// 1 - online
+
+function handle_member(member_data,role_check,presence){
+    var online = document.getElementById("online");
+    var offline = document.getElementById("offline");
+    var online_no_role = document.getElementById("no_role");
+    var offline_role = document.getElementById("offline_user");
+    var role_check_div = document.getElementById(member_data[5]);
+    var new_member = document.createElement("DIV");
+    new_member.setAttribute("class", "member");
+    new_member.setAttribute("id", "member-" + member_data[0]);
+    member_left = document.createElement("DIV");
+    member_right = document.createElement("DIV");
+    member_left.setAttribute("class", "member_left");
+    member_right.setAttribute("class", "member_right");
+    new_member.appendChild(member_left);
+    new_member.appendChild(member_right);
+    user = document.createElement("DIV");
+    user.setAttribute("class", "member_name");
+    user.setAttribute("style", "color: " + member_data[2]);
+    user.innerText = member_data[1];
+    member_PFP = document.createElement("IMG");
+    member_PFP.setAttribute("class", "member_PFP");
+    member_PFP.setAttribute("src", member_data[4]);
+    status_ = document.createElement("DIV");
+    status_.setAttribute("class", "member_status " + member_data[3]);
+    inner_left = document.createElement("DIV");
+    inner_left.setAttribute("class", "inner_left");
+    member_left.appendChild(inner_left);
+    inner_left.appendChild(member_PFP);
+    member_right.appendChild(user);
+    inner_left.appendChild(status_);
+    if(presence == 0){
+        offline_role.appendChild(new_member);
+        offline_role.setAttribute("style", "display:block;");
+    } else if(role_check_div && role_check != 0) {
+        role_check_div.appendChild(new_member);
+    } else if(!role_check_div && role_check != 0){
+        var role = document.createElement("DIV");
+        role.setAttribute("class", "role_list");
+        role.setAttribute("id", member_data[5]);
+        online.appendChild(role);
+        role_name = document.createElement("DIV");
+        role_name.setAttribute("class","role_name");
+        role_name.innerText = member_data[5];
+        role.appendChild(role_name);
+        role.appendChild(new_member);
+    } else {
+        if(!online_no_role){
+            role = document.createElement("DIV");
+            role.setAttribute("class", "role_list");
+            role.setAttribute("id", "no_role");
+            // role.setAttribute("style", "display:none;");
+            online.appendChild(role);
+            role_name = document.createElement("DIV");
+            role_name.setAttribute("class","role_name");
+            role_name.innerText = "Online-";
+            role.appendChild(role_name);
+            role.appendChild(new_member);
+        } else{
+            online_no_role.appendChild(new_member);
+        }
+        // online_no_role.setAttribute("style", "display:block;");
+    }
+
+}
+
 eel.expose(update_member_list_js);
 function update_member_list_js(all_member_data){
-    try{
-        var remove_online = document.getElementById("online");
-        var remove_offline = document.getElementById("offline");
-        remove_online.innerHTML = '';
-        remove_offline.innerHTML = '';
-    }
-    catch{
-        console.log("Does not exist yet.");
-    }
+    var remove_online = document.getElementById("memberArea");
+    remove_online.innerHTML = '';
     var memberArea = document.getElementById("memberArea");
+    var online = document.createElement("DIV");
+    online.setAttribute("id", "online");
+    online.setAttribute("style", "color: rgb(46, 51, 56); font-weight: 700px;");
+    memberArea.appendChild(online);
+    online_name = document.createElement("DIV");
+    online_name.innerText = "ONLINE";
+    online_name.setAttribute("id", "online_name");
+    online.appendChild(online_name);
+    var offline = document.createElement("DIV");
+    offline.setAttribute("id", "offline");
+    offline.setAttribute("style", "color: rgb(46, 51, 56);");
+    memberArea.appendChild(offline);
+    offline_name = document.createElement("DIV");
+    offline_name.innerText = "OFFLINE";
+    offline_name.setAttribute("id", "offline_name");
+    offline.appendChild(offline_name);
+
+    // role = document.createElement("DIV");
+    // role.setAttribute("class", "role_list");
+    // role.setAttribute("id", "no_role");
+    // role.setAttribute("style", "display:none;");
+    // online.appendChild(role);
+    // role_name = document.createElement("DIV");
+    // role_name.setAttribute("class","role_name");
+    // role_name.innerText = "Online-";
+    // role.appendChild(role_name);
+    role = document.createElement("DIV");
+    role.setAttribute("class", "role_list");
+    role.setAttribute("id", "offline_user");
+    role.setAttribute("style", "display:none;");
+    offline.appendChild(role);
+    role_name = document.createElement("DIV");
+    role_name.setAttribute("class","role_name");
+    role_name.innerText = "Offline-";
+    role.appendChild(role_name);
+
     for(i=0;i<all_member_data.length;i++){
-        var new_member = document.createElement("DIV");
-        if(all_member_data[i][3] == "online" || all_member_data[i][3] == "idle" || all_member_data[i][3] == "dnd"){
-            var online_check = document.getElementById("online");
-            if(online_check){
-                if(all_member_data[i][5] != 0){
+        var id_check = document.getElementById("member-" + all_member_data[i][0]);
+        if(id_check){
+            continue;
+        } else{
+            var member_data = [];
+            var member_data_ = [];
+            if(all_member_data[i][3] == "online" || all_member_data[i][3] == "idle" || all_member_data[i][3] == "dnd"){ // 1 refers to online, and 0 refers to offline;
+                member_data.push(1);
+                if(all_member_data[i][5] == 0){
+                    member_data_.push(all_member_data[i][0]);
+                    member_data_.push(all_member_data[i][1]);
+                    member_data_.push(all_member_data[i][2]);
+                    member_data_.push(all_member_data[i][3]);
+                    member_data_.push(all_member_data[i][4]);
+                    handle_member(member_data_,0,member_data);
+                } else {
                     var role_check = document.getElementById(all_member_data[i][5]);
                     if(role_check){
-                        if(document.getElementById("member-" + all_member_data[i][0])){
-                            continue;
-                        } else {
-                            new_member.setAttribute("class", "member");
-                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
-                            role_check.appendChild(new_member);
-                            member_left = document.createElement("DIV");
-                            member_right = document.createElement("DIV");
-                            member_left.setAttribute("class", "member_left");
-                            member_right.setAttribute("class", "member_right");
-                            new_member.appendChild(member_left);
-                            new_member.appendChild(member_right);
-                            user = document.createElement("DIV");
-                            user.setAttribute("class", "member_name");
-                            user.setAttribute("style", "color: " + all_member_data[i][2]);
-                            user.innerText = all_member_data[i][1];
-                            member_PFP = document.createElement("IMG");
-                            member_PFP.setAttribute("class", "member_PFP");
-                            member_PFP.setAttribute("src", all_member_data[i][4]);
-                            status_ = document.createElement("DIV");
-                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
-                            inner_left = document.createElement("DIV");
-                            inner_left.setAttribute("class", "inner_left");
-                            member_left.appendChild(inner_left);
-                            inner_left.appendChild(member_PFP);
-                            member_right.appendChild(user);
-                            inner_left.appendChild(status_);
-                        }
-                    } else {
-                        if(document.getElementById("member-" + all_member_data[i][0])){
-                            continue;
-                        } else {
-                            var role = document.createElement("DIV");
-                            role.setAttribute("class", "role_list");
-                            role.setAttribute("id", all_member_data[i][5]);
-                            // role.innerText = all_member_data[i][5];
-                            online_check.appendChild(role);
-                            role_name = document.createElement("DIV");
-                            role_name.setAttribute("class","role_name");
-                            role_name.innerText = all_member_data[i][5];
-                            role.appendChild(role_name);
-                            new_member.setAttribute("class", "member");
-                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
-                            role.appendChild(new_member);
-                            member_left = document.createElement("DIV");
-                            member_right = document.createElement("DIV");
-                            member_left.setAttribute("class", "member_left");
-                            member_right.setAttribute("class", "member_right");
-                            new_member.appendChild(member_left);
-                            new_member.appendChild(member_right);
-                            user = document.createElement("DIV");
-                            user.setAttribute("class", "member_name");
-                            user.setAttribute("style", "color: " + all_member_data[i][2]);
-                            user.innerText = all_member_data[i][1];
-                            member_PFP = document.createElement("IMG");
-                            member_PFP.setAttribute("class", "member_PFP");
-                            member_PFP.setAttribute("src", all_member_data[i][4]);
-                            status_ = document.createElement("DIV");
-                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
-                            inner_left = document.createElement("DIV");
-                            inner_left.setAttribute("class", "inner_left");
-                            member_left.appendChild(inner_left);
-                            inner_left.appendChild(member_PFP);
-                            member_right.appendChild(user);
-                            inner_left.appendChild(status_);
-                        }
+                        continue;
+                    } else{
+                    member_data_.push(all_member_data[i][0]);
+                    member_data_.push(all_member_data[i][1]);
+                    member_data_.push(all_member_data[i][2]);
+                    member_data_.push(all_member_data[i][3]);
+                    member_data_.push(all_member_data[i][4]);
+                    member_data_.push(all_member_data[i][5]);
+                    handle_member(member_data_,1,member_data);
                     }
                 }
             } else {
-                if(document.getElementById("member-" + all_member_data[i][0])){
-                    continue;
-                } else {
-                    if(all_member_data[i][5] != 0){
-                        var role_check = document.getElementById(all_member_data[i][5]);
-                        if(role_check){
-                            var online = document.createElement("DIV");
-                            online.setAttribute("id", "online");
-                            online.innerText = "Online";
-                            online.setAttribute("style", "color: rgb(46, 51, 56);");
-                            memberArea.appendChild(online);
-                            online.appendChild(role);
-                            new_member.setAttribute("class", "member");
-                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
-                            role.appendChild(new_member);
-                            member_left = document.createElement("DIV");
-                            member_right = document.createElement("DIV");
-                            member_left.setAttribute("class", "member_left");
-                            member_right.setAttribute("class", "member_right");
-                            new_member.appendChild(member_left);
-                            new_member.appendChild(member_right);
-                            user = document.createElement("DIV");
-                            user.setAttribute("class", "member_name");
-                            user.setAttribute("style", "color: " + all_member_data[i][2]);
-                            user.innerText = all_member_data[i][1];
-                            member_PFP = document.createElement("IMG");
-                            member_PFP.setAttribute("class", "member_PFP");
-                            member_PFP.setAttribute("src", all_member_data[i][4]);
-                            status_ = document.createElement("DIV");
-                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
-                            inner_left = document.createElement("DIV");
-                            inner_left.setAttribute("class", "inner_left");
-                            member_left.appendChild(inner_left);
-                            inner_left.appendChild(member_PFP);
-                            member_right.appendChild(user);
-                            inner_left.appendChild(status_);
-                        } else {
-                            console.log("RAWR");
-                            var online = document.createElement("DIV");
-                            online.setAttribute("id", "online");
-                            online.setAttribute("style", "color: rgb(46, 51, 56); font-weight: 700px;");
-                            memberArea.appendChild(online);
-                            online_name = document.createElement("DIV");
-                            online_name.innerText = "ONLINE";
-                            online_name.setAttribute("id", "online_name");
-                            online.appendChild(online_name);
-                            var role = document.createElement("DIV");
-                            role.setAttribute("class", "role_list");
-                            role.setAttribute("id", all_member_data[i][5]);
-                            // role.innerText = all_member_data[i][5];
-                            online.appendChild(role);
-                            role_name = document.createElement("DIV");
-                            role_name.setAttribute("class","role_name");
-                            role_name.innerText = all_member_data[i][5];
-                            role.appendChild(role_name);
-                            new_member.setAttribute("class", "member");
-                            new_member.setAttribute("id", "member-" + all_member_data[i][0]);
-                            role.appendChild(new_member);
-                            member_left = document.createElement("DIV");
-                            member_right = document.createElement("DIV");
-                            member_left.setAttribute("class", "member_left");
-                            member_right.setAttribute("class", "member_right");
-                            new_member.appendChild(member_left);
-                            new_member.appendChild(member_right);
-                            user = document.createElement("DIV");
-                            user.setAttribute("class", "member_name");
-                            user.setAttribute("style", "color: " + all_member_data[i][2]);
-                            user.innerText = all_member_data[i][1];
-                            member_PFP = document.createElement("IMG");
-                            member_PFP.setAttribute("class", "member_PFP");
-                            member_PFP.setAttribute("src", all_member_data[i][4]);
-                            status_ = document.createElement("DIV");
-                            status_.setAttribute("class", "member_status " + all_member_data[i][3]);
-                            inner_left = document.createElement("DIV");
-                            inner_left.setAttribute("class", "inner_left");
-                            member_left.appendChild(inner_left);
-                            inner_left.appendChild(member_PFP);
-                            member_right.appendChild(user);
-                            inner_left.appendChild(status_);
-                        }
-                    }
-                }
-            }
-        } else {
-            var offline_check = document.getElementById("offline");
-            if(offline_check){
-
-            } else {
-                var offline = document.createElement("DIV");
+                member_data.push(0);
+                member_data_.push(all_member_data[i][0]);
+                member_data_.push(all_member_data[i][1]);
+                member_data_.push(all_member_data[i][2]);
+                member_data_.push(all_member_data[i][3]);
+                member_data_.push(all_member_data[i][4]);
+                handle_member(member_data_,0,member_data);
             }
         }
+
     }
 }
 
