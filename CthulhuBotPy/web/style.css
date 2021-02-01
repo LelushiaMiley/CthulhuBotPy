@@ -132,6 +132,10 @@ p {margin-top: 10px; color: rgba(255,255,255,0.4);}
     --idle: rgb(250,166,26);
     --dnd: rgb(240,71,71);
     --offline: rgb(116,127,141);
+    --bold: rgb(86, 97, 111);
+    --tag-color: rgb(114, 137, 218);
+    --tag-bg: rgba(114,137,218,.1);
+    --tag-bg-hover: rgb(114, 137, 218);
 }
 
 /* ::placeholder {
@@ -595,10 +599,22 @@ body {
     padding: 0px;
 }
 
-.messages {padding: 0px!important;margin-bottom: 15px!important;}
+.messages {padding: 0px!important;margin-top: 15px!important;}
+
+.no_username_message {
+    margin-top: 0!important;
+}
 
 .messages:hover{
     background-color: var(--message-hover);
+}
+
+.time_hidden {
+    display:none;
+}
+
+.time_show {
+    display:block;
 }
 
 .user_left {
@@ -674,10 +690,8 @@ body {
     /* padding: 6px; */
     padding: 0px 0px 0px 0px;
     border-radius: 5px;
-    width: calc(100% - 594px);
-    /* margin: 25px;
-    margin-bottom: 40px; */
-    margin: 5px 25px 25px 25px;
+    width: calc(100% - 584px);
+    margin: 5px 20px 25px 20px;
     overflow-y: scroll;
     position: fixed;
     bottom: 0;
@@ -800,6 +814,10 @@ span {
     /* width */
 }
 
+.user_content span {
+    line-height: 130%;
+}
+
 #botArea {
     position: fixed;
     height: 52px;
@@ -827,7 +845,46 @@ canvas {
 }
 
 .member {
+    margin-left: 3px;
+    width: 215px;
     padding:5px 5px 0px 5px;
+}
+
+.member_name {
+    margin-top: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.member_name_with_status {
+    margin-top: 0!important;
+}
+
+.member_status_message {
+    display:inline-block;
+    width:155px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    color: var(--date-color);
+    margin-top: 3px;
+}
+
+.status_emoji {
+    padding-right:5px;
+    display:inline-block;
+    width: 14px;
+    height: 14px;
+}
+
+.hidden_emoji {
+    display:none;
+}
+
+.emoji_status {
+    width: 136px!important;
 }
 
 .member:hover {
@@ -853,24 +910,27 @@ canvas {
 }
 
 .member_right {
-    width: 159px;
+    width: 155px;
     display: inline-block;
     vertical-align: top;
+    /* margin-top: 10px; */
 }
 
 #online {
     padding:5px;
 }
 
-#online_name {
-    padding: 15px;
-    font-size: 15px;
-    font-weight: 700!important;
+#offline {
+    padding:5px;
 }
 
 .role_name {
-    padding: 15px;
-    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 25px 5px 5px;
+    font-size: 13px;
+    color: var(--date-color);
     font-weight: 700!important;
 }
 
@@ -897,4 +957,43 @@ canvas {
 
 .offline {
     background-color: var(--offline);
+}
+
+b {
+    font-weight: bold;
+    color: var(--bold);
+}
+
+em {
+    font-style: italic;
+}
+
+.tag {
+    color: var(--tag-color);
+    background-color: var(--tag-bg);
+    border-radius: 10%;
+    font-weight: 400!important;
+    padding: 0 2px;
+}
+
+em .tag {
+    background-color: transparent!important;
+}
+
+em .tag:hover {
+    text-decoration: underline;
+    color: var(--tag-color);
+}
+
+.tag:hover {
+    color: #fff;
+    background-color: var(--tag-bg-hover);
+}
+
+.tag_channel_name {
+
+}
+
+.tag_member_name {
+
 }

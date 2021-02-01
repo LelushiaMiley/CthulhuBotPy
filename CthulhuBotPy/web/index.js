@@ -34,9 +34,20 @@ else {
 function init () {
     var message_box = document.getElementById('message_box');
     var messageBox = document.getElementById('messageBox');
+    var messageContainer = document.getElementById("messageContainer");
     function resize () {
         message_box.style.height = 'auto';
         message_box.style.height = message_box.scrollHeight+'px';
+        var unit_test = parseInt(message_box.style.height.replace("px", ""));
+        console.log(unit_test);
+        if(unit_test <= 300){
+            unit = message_box.scrollHeight - 40 + 140;
+            messageContainer.style.height = "calc(100% - " + unit +"px)";
+            if(messageContainer.scrollTop > messageContainer.scrollHeight-700){
+                updateScroll();
+            }
+        }
+        message_box.scrollTop = message_box.scrollHeight;
     }
     /* 0-timeout to get the already changed message_box */
     function delayedResize () {
@@ -47,6 +58,10 @@ function init () {
             event.preventDefault();
             message_box.style.height = "40px";
             message_box.setAttribute("style", "height: 40px;");
+            messageContainer.style.height = "calc(100% - 140px)";
+            if(messageContainer.scrollTop > messageContainer.scrollHeight-700){
+                updateScroll();
+            }
         }
     })
     message_box.addEventListener('change', resize);
@@ -114,7 +129,38 @@ function handle_member(member_data,role_check,presence){
     new_member.appendChild(member_left);
     new_member.appendChild(member_right);
     user = document.createElement("DIV");
-    user.setAttribute("class", "member_name");
+    if(presence != 0){
+        if(member_data[7] != ''){
+            user.setAttribute("class", "member_name member_name_with_status");
+            if(member_data[7] != undefined){
+                var emoji = document.createElement("IMG");
+                emoji.setAttribute("class", "status_emoji");
+                emoji.setAttribute("src", member_data[7]);
+            } else {
+                var emoji = document.createElement("IMG");
+                emoji.setAttribute("class", "status_emoji hidden_emoji");
+            }
+            if(member_data[6] != 0 && member_data[6] != "None"){
+                user.setAttribute("class", "member_name member_name_with_status");
+                var activity = document.createElement("DIV");
+                activity.setAttribute("class", "member_status_message emoji_status");
+                activity.innerHTML = member_data[6];
+            } else {
+                user.setAttribute("class", "member_name");
+            }
+        } else {
+            if(member_data[6] != 0 && member_data[6] != "None"){
+                user.setAttribute("class", "member_name member_name_with_status");
+                var activity = document.createElement("DIV");
+                activity.setAttribute("class", "member_status_message");
+                activity.innerHTML = member_data[6];
+            } else {
+                user.setAttribute("class", "member_name");
+            }
+        }
+    } else {
+        user.setAttribute("class", "member_name");
+    }
     user.setAttribute("style", "color: " + member_data[2]);
     user.innerText = member_data[1];
     member_PFP = document.createElement("IMG");
@@ -127,6 +173,14 @@ function handle_member(member_data,role_check,presence){
     member_left.appendChild(inner_left);
     inner_left.appendChild(member_PFP);
     member_right.appendChild(user);
+    if(presence != 0){
+        if(member_data[7] != ''){
+            member_right.appendChild(emoji);
+        }
+        if(member_data[6] != 0 && member_data[6] != "None"){
+            member_right.appendChild(activity);
+        }
+    }
     inner_left.appendChild(status_);
     if(presence == 0){
         offline_role.appendChild(new_member);
@@ -148,7 +202,6 @@ function handle_member(member_data,role_check,presence){
             role = document.createElement("DIV");
             role.setAttribute("class", "role_list");
             role.setAttribute("id", "no_role");
-            // role.setAttribute("style", "display:none;");
             online.appendChild(role);
             role_name = document.createElement("DIV");
             role_name.setAttribute("class","role_name");
@@ -158,9 +211,7 @@ function handle_member(member_data,role_check,presence){
         } else{
             online_no_role.appendChild(new_member);
         }
-        // online_no_role.setAttribute("style", "display:block;");
     }
-
 }
 
 eel.expose(update_member_list_js);
@@ -172,28 +223,11 @@ function update_member_list_js(all_member_data){
     online.setAttribute("id", "online");
     online.setAttribute("style", "color: rgb(46, 51, 56); font-weight: 700px;");
     memberArea.appendChild(online);
-    online_name = document.createElement("DIV");
-    online_name.innerText = "ONLINE";
-    online_name.setAttribute("id", "online_name");
-    online.appendChild(online_name);
     var offline = document.createElement("DIV");
     offline.setAttribute("id", "offline");
     offline.setAttribute("style", "color: rgb(46, 51, 56);");
     memberArea.appendChild(offline);
-    offline_name = document.createElement("DIV");
-    offline_name.innerText = "OFFLINE";
-    offline_name.setAttribute("id", "offline_name");
-    offline.appendChild(offline_name);
 
-    // role = document.createElement("DIV");
-    // role.setAttribute("class", "role_list");
-    // role.setAttribute("id", "no_role");
-    // role.setAttribute("style", "display:none;");
-    // online.appendChild(role);
-    // role_name = document.createElement("DIV");
-    // role_name.setAttribute("class","role_name");
-    // role_name.innerText = "Online-";
-    // role.appendChild(role_name);
     role = document.createElement("DIV");
     role.setAttribute("class", "role_list");
     role.setAttribute("id", "offline_user");
@@ -214,25 +248,28 @@ function update_member_list_js(all_member_data){
             if(all_member_data[i][3] == "online" || all_member_data[i][3] == "idle" || all_member_data[i][3] == "dnd"){ // 1 refers to online, and 0 refers to offline;
                 member_data.push(1);
                 if(all_member_data[i][5] == 0){
-                    member_data_.push(all_member_data[i][0]);
-                    member_data_.push(all_member_data[i][1]);
-                    member_data_.push(all_member_data[i][2]);
-                    member_data_.push(all_member_data[i][3]);
-                    member_data_.push(all_member_data[i][4]);
-                    handle_member(member_data_,0,member_data);
-                } else {
-                    var role_check = document.getElementById(all_member_data[i][5]);
-                    if(role_check){
-                        continue;
-                    } else{
+                    // console.log(all_member_data[i]);
                     member_data_.push(all_member_data[i][0]);
                     member_data_.push(all_member_data[i][1]);
                     member_data_.push(all_member_data[i][2]);
                     member_data_.push(all_member_data[i][3]);
                     member_data_.push(all_member_data[i][4]);
                     member_data_.push(all_member_data[i][5]);
+                    member_data_.push(all_member_data[i][6]);
+                    member_data_.push(all_member_data[i][7]);
+                    // console.log(member_data_);
+                    handle_member(member_data_,0,member_data);
+                } else {
+                    member_data_.push(all_member_data[i][0]);
+                    member_data_.push(all_member_data[i][1]);
+                    member_data_.push(all_member_data[i][2]);
+                    member_data_.push(all_member_data[i][3]);
+                    member_data_.push(all_member_data[i][4]);
+                    member_data_.push(all_member_data[i][5]);
+                    member_data_.push(all_member_data[i][6]);
+                    member_data_.push(all_member_data[i][7]);
+                    // console.log(member_data_);
                     handle_member(member_data_,1,member_data);
-                    }
                 }
             } else {
                 member_data.push(0);
@@ -245,6 +282,11 @@ function update_member_list_js(all_member_data){
             }
         }
 
+    }
+    var all_roles = document.querySelectorAll(".role_name");
+    for(i=0;i<all_roles.length;i++){
+        var nodes = all_roles[i].parentNode.childNodes.length - 1;
+        all_roles[i].innerText = all_roles[i].innerText + "—" + String(nodes);
     }
 }
 
@@ -399,7 +441,11 @@ function send_message_data(message_data){
             message_id = messageArea.lastChild.id;
             var last_message = document.getElementById(message_id);
             last_message_id = messageArea.lastChild.lastChild.firstChild.firstChild.id;
-            var last_message_time = messageArea.lastChild.childNodes[1].childNodes[0].childNodes[1].innerText;
+            try{
+                var last_message_time = messageArea.lastChild.childNodes[1].childNodes[0].childNodes[1].innerText;
+            } catch {
+                var last_message_time = messageArea.lastChild.childNodes[0].childNodes[0].innerText;
+            }
             if(last_message_time == message_data[i][7]){
                 var check = 1;
             } else if(last_message_time.startsWith("Y") && message_data[i][7].startsWith("Y")){
@@ -414,19 +460,33 @@ function send_message_data(message_data){
                 var check = 0;
             }
             if(last_message_id == message_data[i][0] && check == 1){
+                var message = document.createElement("DIV");
+                bot_user = "@" + message_data[i][8];
+                if(message_data[i][5].includes(bot_user)){
+                    message.setAttribute("class", "messages bot_ping no_username_message " + message_data[i][0]);
+                } else{
+                    message.setAttribute("class", "messages no_username_message " + message_data[i][0]);
+                }
+                message.setAttribute("id",message_data[i][1]);
+                var messageArea = document.getElementById("messageArea");
+                messageArea.appendChild(message);
                 var addition_left = document.createElement("DIV");
                 addition_left.setAttribute("class", "addition_left");
                 var user_right = document.createElement("DIV");
                 user_right.setAttribute("class", "user_right");
-                last_message.appendChild(addition_left);
-                last_message.appendChild(user_right);
+                message.appendChild(addition_left);
+                message.appendChild(user_right);
+                time = document.createElement("span");
+                time.setAttribute("class", "messageTime additionTime time_hidden");
+                time.innerText = message_data[i][7];
+                addition_left.appendChild(time);
                 var user_content = document.createElement("DIV");
                 user_content.setAttribute("class", "user_content");
                 user_right.appendChild(user_content);
                 content = document.createElement("span");
                 content.setAttribute("class","messageContent");
-                content.setAttribute("id", message_data[i][0]);
-                content.innerText = message_data[i][5];
+                content.setAttribute("id", message_data[i][1]);
+                content.innerHTML = message_data[i][5];
                 user_content.appendChild(content);
                 var element = document.getElementById("messageContainer");
                 if(message_data[8]){
@@ -436,7 +496,13 @@ function send_message_data(message_data){
                 }
             } else {
                 var message = document.createElement("DIV");
-                message.setAttribute("class", "messages " + message_data[i][0]);
+                bot_user = "@" + message_data[i][8];
+                if(message_data[i][5].includes(bot_user)){
+                    message.setAttribute("class", "messages bot_ping " + message_data[i][0]);
+                } else{
+                    message.setAttribute("class", "messages " + message_data[i][0]);
+                }
+                // message.setAttribute("class", "messages " + message_data[i][0]);
                 message.setAttribute("id",message_data[i][1]);
                 var messageArea = document.getElementById("messageArea");
                 messageArea.appendChild(message);
@@ -452,7 +518,8 @@ function send_message_data(message_data){
                 author.innerText = message_data[i][2];
                 content = document.createElement("span");
                 content.setAttribute("class","messageContent");
-                content.innerText = message_data[i][5];
+                content.setAttribute("id", message_data[i][1]);
+                content.innerHTML = message_data[i][5];
                 time = document.createElement("span");
                 time.setAttribute("class", "messageTime");
                 time.innerText = message_data[i][7];
@@ -480,7 +547,13 @@ function send_message_data(message_data){
             }
         } else {
             var message = document.createElement("DIV");
-            message.setAttribute("class", "messages " + message_data[i][0]);
+            bot_user = "@" + message_data[i][8];
+            if(message_data[i][5].includes(bot_user)){
+                message.setAttribute("class", "messages bot_ping " + message_data[i][0]);
+            } else{
+                message.setAttribute("class", "messages " + message_data[i][0]);
+            }
+            // message.setAttribute("class", "messages " + message_data[i][0]);
             message.setAttribute("id",message_data[i][1]);
             var messageArea = document.getElementById("messageArea");
             messageArea.appendChild(message);
@@ -496,7 +569,8 @@ function send_message_data(message_data){
             author.innerText = message_data[i][2];
             content = document.createElement("span");
             content.setAttribute("class","messageContent");
-            content.innerText = message_data[i][5];
+            content.setAttribute("id", message_data[i][1]);
+            content.innerHTML = message_data[i][5];
             time = document.createElement("span");
             time.setAttribute("class", "messageTime");
             time.innerText = message_data[i][7];
@@ -535,7 +609,11 @@ function send_message_data(message_data){
             event.target.setAttribute("style", "color: " + color + ";");
         });
     }
-
+    var messageArea = document.getElementById("messageArea");
+    var first_child = messageArea.firstChild;
+    first_child.setAttribute("style", "margin-top: 0px!important;");
+    var last_child = messageArea.lastChild;
+    last_child.setAttribute("style", "margin-bottom: 15px!important;");
     updateScroll();
 }
 
@@ -543,84 +621,110 @@ eel.expose(new_message);
 function new_message(message_data){
     var focused_channel = document.querySelector(".focused");
     console.log("It starts");
-    if(focused_channel.id == message_data[6]){
-        var messageArea = document.getElementById("messageArea");
-        message_id = messageArea.lastChild.id;
-        var last_message = document.getElementById(message_id);
-        last_message_id = messageArea.lastChild.lastChild.firstChild.firstChild.id;
-        if(last_message_id == message_data[0]){
-            console.log("Hi");
-            var addition_left = document.createElement("DIV");
-            addition_left.setAttribute("class", "addition_left");
-            var user_right = document.createElement("DIV");
-            user_right.setAttribute("class", "user_right");
-            last_message.appendChild(addition_left);
-            last_message.appendChild(user_right);
-            var user_content = document.createElement("DIV");
-            user_content.setAttribute("class", "user_content");
-            user_right.appendChild(user_content);
-            content = document.createElement("span");
-            content.setAttribute("class","messageContent");
-            content.setAttribute("id", message_data[0]);
-            content.innerText = message_data[5];
-            user_content.appendChild(content);
-            var element = document.getElementById("messageContainer");
-            if(message_data[8]){
-                updateScroll();
-            } else if(element.scrollTop > element.scrollHeight-700){
-                updateScroll();
-            }
-        } else {
-            console.log("Down here!");
-            var message = document.createElement("DIV");
-            message.setAttribute("class", "messages");
-            message.setAttribute("id",message_data[1]);
+    if(focused_channel.id != null){
+        if(focused_channel.id == message_data[6]){
             var messageArea = document.getElementById("messageArea");
-            messageArea.appendChild(message);
-            var message = document.getElementById(message_data[1]);
-            var pfp = document.createElement("IMG");
-            pfp.setAttribute("src", message_data[4]);
-            pfp.setAttribute("class","userPFP");
-            var author = document.createElement("span");
-            author.setAttribute("class","messageUser");
-            color = message_data[3];
-            console.log(color);
-            author.setAttribute("style", "color: " + color);
-            author.setAttribute("id", message_data[0]);
-            author.innerText = message_data[2];
-            content = document.createElement("span");
-            content.setAttribute("class","messageContent");
-            content.innerText = message_data[5];
-            time = document.createElement("span");
-            time.setAttribute("class", "messageTime");
-            time.innerText = message_data[9];
+            var last_child = messageArea.lastChild;
+            last_child.setAttribute("style", "");
+            message_id = messageArea.lastChild.id;
+            var last_message = document.getElementById(message_id);
+            last_message_id = messageArea.lastChild.lastChild.firstChild.firstChild.id;
+            if(last_message_id == message_data[0]){
+                // last_message.setAttribute("style", "margin-bottom: 0px!important");
+                var message = document.createElement("DIV");
+                bot_user = "@" + message_data[10];
+                if(message_data[5].includes(bot_user)){
+                    message.setAttribute("class", "messages no_username_message bot_ping " + message_data[0]);
+                } else {
+                    message.setAttribute("class", "messages no_username_message " + message_data[0]);
+                }
+                message.setAttribute("style", "margin-bottom: 15px!important;");
+                message.setAttribute("id",message_data[1]);
+                var messageArea = document.getElementById("messageArea");
+                messageArea.appendChild(message);
+                var addition_left = document.createElement("DIV");
+                addition_left.setAttribute("class", "addition_left");
+                var user_right = document.createElement("DIV");
+                user_right.setAttribute("class", "user_right");
+                message.appendChild(addition_left);
+                message.appendChild(user_right);
+                time = document.createElement("span");
+                time.setAttribute("class", "messageTime additionTime time_hidden");
+                time.innerText = message_data[9];
+                addition_left.appendChild(time);
+                var user_content = document.createElement("DIV");
+                user_content.setAttribute("class", "user_content");
+                user_right.appendChild(user_content);
+                content = document.createElement("span");
+                content.setAttribute("class","messageContent");
+                content.setAttribute("id", message_data[1]);
+                content.innerHTML = message_data[5];
+                user_content.appendChild(content);
+                var element = document.getElementById("messageContainer");
+                if(message_data[8]){
+                    updateScroll();
+                } else if(element.scrollTop > element.scrollHeight-700){
+                    updateScroll();
+                }
+            } else {
+                console.log("Down here!");
+                var message = document.createElement("DIV");
+                bot_user = "@" + message_data[10];
+                if(message_data[5].includes(bot_user)){
+                    message.setAttribute("class", "messages bot_ping " + message_data[0]);
+                } else{
+                    message.setAttribute("class", "messages " + message_data[0]);
+                }
+                message.setAttribute("style", "margin-bottom: 15px!important;");
+                message.setAttribute("id",message_data[1]);
+                var messageArea = document.getElementById("messageArea");
+                messageArea.appendChild(message);
+                var message = document.getElementById(message_data[1]);
+                var pfp = document.createElement("IMG");
+                pfp.setAttribute("src", message_data[4]);
+                pfp.setAttribute("class","userPFP");
+                var author = document.createElement("span");
+                author.setAttribute("class","messageUser");
+                color = message_data[3];
+                console.log(color);
+                author.setAttribute("style", "color: " + color);
+                author.setAttribute("id", message_data[0]);
+                author.innerText = message_data[2];
+                content = document.createElement("span");
+                content.setAttribute("class","messageContent");
+                content.setAttribute("id", message_data[i][1]);
+                content.innerHTML = message_data[5];
+                time = document.createElement("span");
+                time.setAttribute("class", "messageTime");
+                time.innerText = message_data[9];
 
-            var user_left = document.createElement("DIV");
-            user_left.setAttribute("class", "user_left");
-            message.appendChild(user_left);
-            var user_right = document.createElement("DIV");
-            user_right.setAttribute("class", "user_right");
-            message.appendChild(user_right);
+                var user_left = document.createElement("DIV");
+                user_left.setAttribute("class", "user_left");
+                message.appendChild(user_left);
+                var user_right = document.createElement("DIV");
+                user_right.setAttribute("class", "user_right");
+                message.appendChild(user_right);
 
-            var user_icon = document.createElement("DIV");
-            user_icon.setAttribute("class", "user_icon");
-            user_left.appendChild(user_icon);
-            var user_and_time = document.createElement("DIV");
-            user_and_time.setAttribute("class", "user_and_time");
-            user_right.appendChild(user_and_time);
-            var user_content = document.createElement("DIV");
-            user_content.setAttribute("class", "user_content");
-            user_right.appendChild(user_content);
+                var user_icon = document.createElement("DIV");
+                user_icon.setAttribute("class", "user_icon");
+                user_left.appendChild(user_icon);
+                var user_and_time = document.createElement("DIV");
+                user_and_time.setAttribute("class", "user_and_time");
+                user_right.appendChild(user_and_time);
+                var user_content = document.createElement("DIV");
+                user_content.setAttribute("class", "user_content");
+                user_right.appendChild(user_content);
 
-            user_icon.appendChild(pfp);
-            user_and_time.appendChild(author);
-            user_and_time.appendChild(time);
-            user_content.appendChild(content);
-            var element = document.getElementById("messageContainer");
-            if(message_data[8]){
-                updateScroll();
-            } else if(element.scrollTop > element.scrollHeight-700){
-                updateScroll();
+                user_icon.appendChild(pfp);
+                user_and_time.appendChild(author);
+                user_and_time.appendChild(time);
+                user_content.appendChild(content);
+                var element = document.getElementById("messageContainer");
+                if(message_data[8]){
+                    updateScroll();
+                } else if(element.scrollTop > element.scrollHeight-700){
+                    updateScroll();
+                }
             }
         }
     }
