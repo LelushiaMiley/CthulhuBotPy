@@ -1,6 +1,7 @@
 prefix = "Cthulhu " # Declare the prefix for the bot
 
 # Imports
+import calendar
 import datetime
 import numpy as np
 import difflib
@@ -90,10 +91,81 @@ def update_member_list(channel_id):
 					member_data.append(str(member.status))
 					member_data.append(str(member.avatar_url))
 					member_data.append(str(role))
+					if member.activity != None:
+						activity = member.activity
+						emoji_url = ''
+						if isinstance(activity, discord.Game):
+							name = activity.name
+							Type = "Playing "
+							Activity = f"{Type}**{name}**"
+						elif isinstance(activity, discord.Streaming):
+							name2 = activity.name
+							name3 = activity.platform
+							Type = "Streaming "
+							Activity = f"{Type}**{name2} on {name3}**"
+						elif isinstance(activity, discord.Spotify):
+							name4 = activity.title
+							name5 = activity.artists
+							Type = "Listening to "
+							Activity = f"{Type}**{name4}** by **{name5}**"
+						elif isinstance(activity, discord.CustomActivity):
+							name6 = activity.name
+							Type = "Custom Status"
+							Activity = f"{name6}"
+							if member.activity.emoji != None:
+								emoji_url = member.activity.emoji.url
+						else:
+							name7 = activity.name
+							Type =  "Playing "
+							Activity = f"{Type}**{name7}**"
+
+						space = [' ']
+						if '***' in Activity:
+							ast_3_check = 0
+							while '***' in Activity:
+								if ast_3_check == 0:
+									start = Activity.find('***')
+									end = start + 3
+									Activity = Activity[:start] + "<em><b>" + Activity[end:]
+									ast_3_check = 1
+								elif ast_3_check == 1:
+									start = Activity.find('***')
+									end = start + 3
+									Activity = Activity[:start] + "</b></em>" + Activity[end:]
+									ast_3_check = 0
+						if '**' in Activity:
+							ast_3_check = 0
+							while '**' in Activity:
+								if ast_3_check == 0:
+									start = Activity.find('**')
+									end = start + 2
+									Activity = Activity[:start] + "<b>" + Activity[end:]
+									ast_3_check = 1
+								elif ast_3_check == 1:
+									start = Activity.find('**')
+									end = start + 2
+									Activity = Activity[:start] + "</b>" + Activity[end:]
+									ast_3_check = 0
+						if '*' in Activity:
+							ast_3_check = 0
+							while '*' in Activity:
+								if ast_3_check == 0:
+									start = Activity.find('*')
+									end = start + 1
+									Activity = Activity[:start] + "<em>" + Activity[end:]
+									ast_3_check = 1
+								elif ast_3_check == 1:
+									start = Activity.find('*')
+									end = start + 1
+									Activity = Activity[:start] + "</em>" + Activity[end:]
+									ast_3_check = 0
+						member_data.append(str(Activity))
+						member_data.append(str(emoji_url))
+					else:
+						member_data.append(0)
 					all_member_data.append(member_data)
 					member_data = []
 	if len(all_member_data) > 0:
-		print("Hello!")
 		for member in members:
 			member_data.append(str(member.id))
 			member_data.append(str(member.display_name))
@@ -101,6 +173,37 @@ def update_member_list(channel_id):
 			member_data.append(str(member.status))
 			member_data.append(str(member.avatar_url))
 			member_data.append(0)
+			if member.activity != None:
+				activity = member.activity
+				emoji_url = ''
+				if isinstance(activity, discord.Game):
+					name = activity.name
+					Type = "Playing "
+					Activity = f"{Type}**{name}**"
+				elif isinstance(activity, discord.Streaming):
+					name2 = activity.name
+					name3 = activity.platform
+					Type = "Streaming "
+					Activity = f"{Type}**{name2} on {name3}**"
+				elif isinstance(activity, discord.Spotify):
+					name4 = activity.title
+					name5 = activity.artists
+					Type = "Listening to "
+					Activity = f"{Type}**{name4}** by **{name5}**"
+				elif isinstance(activity, discord.CustomActivity):
+					name6 = activity.name
+					Type = "Custom Status"
+					Activity = f"{name6}"
+					if member.activity.emoji != None:
+						emoji_url = member.activity.emoji.url
+				else:
+					name7 = activity.name
+					Type =  "Playing "
+					Activity = f"{Type}**{name7}**"
+				member_data.append(str(Activity))
+				member_data.append(str(emoji_url))
+			else:
+				member_data.append(0)
 			all_member_data.append(member_data)
 			member_data = []
 	else:
@@ -111,9 +214,40 @@ def update_member_list(channel_id):
 			member_data.append(str(member.status))
 			member_data.append(str(member.avatar_url))
 			member_data.append(0)
+			if member.activity != None:
+				activity = member.activity
+				emoji_url = ''
+				if isinstance(activity, discord.Game):
+					name = activity.name
+					Type = "Playing "
+					Activity = f"{Type}**{name}**"
+				elif isinstance(activity, discord.Streaming):
+					name2 = activity.name
+					name3 = activity.platform
+					Type = "Streaming "
+					Activity = f"{Type}**{name2} on {name3}**"
+				elif isinstance(activity, discord.Spotify):
+					name4 = activity.title
+					name5 = str(activity.artists)
+					Type = "Listening to "
+					Activity = f"{Type}**{name4}** by **{name5}**"
+				elif isinstance(activity, discord.CustomActivity):
+					name6 = activity.name
+					Type = "Custom Status"
+					Activity = f"{name6}"
+					if member.activity.emoji != None:
+						emoji_url = member.activity.emoji.url
+				else:
+					name7 = activity.name
+					Type =  "Playing "
+					Activity = f"{Type}**{name7}**"
+				member_data.append(str(Activity))
+				member_data.append(str(emoji_url))
+				# print(Activity)
+			else:
+				member_data.append(0)
 			all_member_data.append(member_data)
 			member_data = []
-	# print(all_member_data)
 	eel.update_member_list_js(all_member_data)
 
 
@@ -141,12 +275,74 @@ async def messages_to_see():
 				colour = "rgb(" + str(color[0]) + "," + str(color[1]) + "," + str(color[2]) + ")"
 				temp_array.append(str(member_colour))
 				temp_array.append(str(message.author.avatar_url))
+				if "<#" in message.content:
+					while message.content.find("<#") != -1:
+						start = message.content.find("<#")
+						end = start + 20
+						channel_ = bot.get_channel(int(message.content[start+2:end]))
+						channel_name = channel_.name
+						message.content = message.content[:start] + "<i class=\"tag tag_channel_name\">#" + channel_name + "</i>" + message.content[end+1:]
+				if "<@" in message.content:
+					while message.content.find("<@") != -1:
+						start = message.content.find("<@")
+						if message.content[start+2] == "!":
+							end = start + 21
+							for member in members:
+								if member.id == int(message.content[start+3:end]):
+									user_name = member.display_name
+							message.content = message.content[:start] + "<i class=\"tag tag_member_name\">@" + user_name + "</i>" + message.content[end+1:]
+						else:
+							end = start + 20
+							for member in members:
+								if member.id == int(message.content[start+2:end]):
+									user_name = member.display_name
+							message.content = message.content[:start] + "<i class=\"tag tag_member_name\">@" + user_name + "</i>" + message.content[end+1:]
+				if '***' in message.content:
+					ast_3_check = 0
+					while '***' in message.content:
+						if ast_3_check == 0:
+							start = message.content.find('***')
+							end = start + 3
+							message.content = message.content[:start] + "<em><b>" + message.content[end:]
+							ast_3_check = 1
+						elif ast_3_check == 1:
+							start = message.content.find('***')
+							end = start + 3
+							message.content = message.content[:start] + "</b></em>" + message.content[end:]
+							ast_3_check = 0
+				if '**' in message.content:
+					ast_3_check = 0
+					while '**' in message.content:
+						if ast_3_check == 0:
+							start = message.content.find('**')
+							end = start + 2
+							message.content = message.content[:start] + "<b>" + message.content[end:]
+							ast_3_check = 1
+						elif ast_3_check == 1:
+							start = message.content.find('**')
+							end = start + 2
+							message.content = message.content[:start] + "</b>" + message.content[end:]
+							ast_3_check = 0
+				if '*' in message.content:
+					ast_3_check = 0
+					while '*' in message.content:
+						if ast_3_check == 0:
+							start = message.content.find('*')
+							end = start + 1
+							message.content = message.content[:start] + "<em>" + message.content[end:]
+							ast_3_check = 1
+						elif ast_3_check == 1:
+							start = message.content.find('*')
+							end = start + 1
+							message.content = message.content[:start] + "</em>" + message.content[end:]
+							ast_3_check = 0
 				temp_array.append(message.content)
 				if len(message.attachments) > 0:
+					print(message.attachments)
 					temp_array.append(message.attachments)
 				else:
 					temp_array.append(None)
-				if message.created_at.day == datetime.datetime.now().day:
+				if message.created_at.day == datetime.datetime.now().day and message.created_at.year == datetime.datetime.now().year and message.created_at.month == datetime.datetime.now().month:
 					hour_var = message.created_at.hour
 					minute_var = message.created_at.minute
 					if hour_var < 10:
@@ -158,7 +354,7 @@ async def messages_to_see():
 					else:
 						minute = str(minute_var)
 					date = "Today at " + hour + ":" + minute
-				elif message.created_at.day == datetime.datetime.now().day - 1 or datetime.datetime.now().day - 1 < 1:
+				elif message.created_at.day == datetime.datetime.now().day - 1:
 					hour_var = message.created_at.hour
 					minute_var = message.created_at.minute
 					if hour_var < 10:
@@ -170,9 +366,67 @@ async def messages_to_see():
 					else:
 						minute = str(minute_var)
 					date = "Yesterday at " + hour + ":" + minute
+				elif datetime.datetime.now().day - 1 < 1:
+					check = 0
+					string_month = str(message.created_at.month)
+					string_day = str(message.created_at.day)
+					if string_month == "1":
+						if string_day == "31":
+							check = 1
+					elif string_month == "2":
+						if calendar.isleap(message.created_at.year):
+							if string_day == "29":
+								check = 1
+						elif string_day == "28":
+							check = 1
+					elif string_month == "3":
+						if string_day == "31":
+							check = 1
+					elif string_month == "4":
+						if string_day == "30":
+							check = 1
+					elif string_month == "5":
+						if string_day == "31":
+							check = 1
+					elif string_month == "6":
+						if string_day == "30":
+							check = 1
+					elif string_month == "7":
+						if string_day == "31":
+							check = 1
+					elif string_month == "8":
+						if string_day == "31":
+							check = 1
+					elif string_month == "9":
+						if string_day == "30":
+							check = 1
+					elif string_month == "10":
+						if string_day == "31":
+							check = 1
+					elif string_month == "11":
+						if string_day == "30":
+							check = 1
+					elif string_month == "12":
+						if string_day == "31":
+							check = 1
+					if check == 1:
+						hour_var = message.created_at.hour
+						minute_var = message.created_at.minute
+						if hour_var < 10:
+							hour = "0" + str(hour_var)
+						else:
+							hour = str(hour_var)
+						if minute_var < 10:
+							minute = "0" + str(minute_var)
+						else:
+							minute = str(minute_var)
+						date = "Yesterday at " + hour + ":" + minute
+					else:
+						date = str(str(message.created_at.year) + "/" + str(message.created_at.month) + "/" + str(message.created_at.day))
 				else:
 					date = str(str(message.created_at.year) + "/" + str(message.created_at.month) + "/" + str(message.created_at.day))
 				temp_array.append(str(date))
+				temp_array.append(bot.user.display_name)
 				final_message_array.append(temp_array)
 				temp_array = []
 			eel.send_message_data(final_message_array)
@@ -220,7 +474,10 @@ async def on_ready():					# function that triggers once the connection with the 
 
 @bot.event
 async def on_message(ctx): 				# triggers every time a new message is sent in a channel the bot has access to
-	print(ctx.content)
+	# print(ctx.content)
+	# print(ctx.guild.emojis)
+	# for emoji in ctx.guild.emojis:
+	# 	print(emoji.url)
 	channel_id = str(ctx.channel.id)
 	if ctx.author == bot.user:
 		scroll = True
@@ -243,12 +500,74 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 	else:
 		minute = str(minute_var)
 	date = "Today at " + hour + ":" + minute
-	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,colour,str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(date)]
+	members = ctx.guild.members
+	if "<#" in ctx.content:
+		while ctx.content.find("<#") != -1:
+			start = ctx.content.find("<#")
+			end = start + 20
+			channel_ = bot.get_channel(int(ctx.content[start+2:end]))
+			channel_name = channel_.name
+			ctx.content = ctx.content[:start] + "<i class=\"tag tag_channel_name\">#" + channel_name + "</i>" + ctx.content[end+1:]
+	if "<@" in ctx.content:
+		while ctx.content.find("<@") != -1:
+			start = ctx.content.find("<@")
+			if ctx.content[start+2] == "!":
+				end = start + 21
+				for member in members:
+					if member.id == int(ctx.content[start+3:end]):
+						user_name = member.display_name
+				ctx.content = ctx.content[:start] + "<i class=\"tag tag_member_name\">@" + user_name + "</i>" + ctx.content[end+1:]
+			else:
+				end = start + 20
+				for member in members:
+					if member.id == int(ctx.content[start+2:end]):
+						user_name = member.display_name
+				ctx.content = ctx.content[:start] + "<i class=\"tag tag_member_name\">@" + user_name + "</i>" + ctx.content[end+1:]
+	if '***' in ctx.content:
+		ast_3_check = 0
+		while '***' in ctx.content:
+			if ast_3_check == 0:
+				start = ctx.content.find('***')
+				end = start + 3
+				ctx.content = ctx.content[:start] + "<em><b>" + ctx.content[end:]
+				ast_3_check = 1
+			elif ast_3_check == 1:
+				start = ctx.content.find('***')
+				end = start + 3
+				ctx.content = ctx.content[:start] + "</b></em>" + ctx.content[end:]
+				ast_3_check = 0
+	if '**' in ctx.content:
+		ast_3_check = 0
+		while '**' in ctx.content:
+			if ast_3_check == 0:
+				start = ctx.content.find('**')
+				end = start + 2
+				ctx.content = ctx.content[:start] + "<b>" + ctx.content[end:]
+				ast_3_check = 1
+			elif ast_3_check == 1:
+				start = ctx.content.find('**')
+				end = start + 2
+				ctx.content = ctx.content[:start] + "</b>" + ctx.content[end:]
+				ast_3_check = 0
+	if '*' in ctx.content:
+		ast_3_check = 0
+		while '*' in ctx.content:
+			if ast_3_check == 0:
+				start = ctx.content.find('*')
+				end = start + 1
+				ctx.content = ctx.content[:start] + "<em>" + ctx.content[end:]
+				ast_3_check = 1
+			elif ast_3_check == 1:
+				start = ctx.content.find('*')
+				end = start + 1
+				ctx.content = ctx.content[:start] + "</em>" + ctx.content[end:]
+				ast_3_check = 0
+	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,colour,str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(date),bot.user.display_name]
 
 	eel.new_message(message_array)
 
 def runClient():
-    bot.run("") # bot's token; will be omitted from GitHub pushes
+    bot.run("TOKEN") # bot's token; will be omitted from GitHub pushes
 
 threading.Thread(target=runClient).start()			# starts a thread for the bot as it doesn't seem to get along with Eel otherwise
 
