@@ -621,7 +621,7 @@ eel.expose(new_message);
 function new_message(message_data){
     var focused_channel = document.querySelector(".focused");
     console.log("It starts");
-    if(focused_channel.id != null){
+    if(focused_channel != null){
         if(focused_channel.id == message_data[6]){
             var messageArea = document.getElementById("messageArea");
             var last_child = messageArea.lastChild;
@@ -692,7 +692,7 @@ function new_message(message_data){
                 author.innerText = message_data[2];
                 content = document.createElement("span");
                 content.setAttribute("class","messageContent");
-                content.setAttribute("id", message_data[i][1]);
+                content.setAttribute("id", message_data[1]);
                 content.innerHTML = message_data[5];
                 time = document.createElement("span");
                 time.setAttribute("class", "messageTime");

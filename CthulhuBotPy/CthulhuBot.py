@@ -261,6 +261,7 @@ async def messages_to_see():
 			temp_array = []
 			for message in messages:
 				server = message.guild.id
+				guild = bot.get_guild(server)
 				members = bot.get_guild(server).members
 				for member in members:
 					if member.id == message.author.id:
@@ -291,6 +292,12 @@ async def messages_to_see():
 								if member.id == int(message.content[start+3:end]):
 									user_name = member.display_name
 							message.content = message.content[:start] + "<i class=\"tag tag_member_name\">@" + user_name + "</i>" + message.content[end+1:]
+						elif message.content[start+2] == "&":
+							end = start + 21
+							role = guild.get_role(int(message.content[start+3:end]))
+							role_name = role.name
+							colour = role.colour
+							message.content = message.content[:start] + "<i id=\"" + str(colour) + "\" class=\"tag tag_role_name\">@" + role_name + "</i>" + message.content[end+1:]
 						else:
 							end = start + 20
 							for member in members:
@@ -489,6 +496,8 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 		message_attachments = None
 	color = list(np.random.choice(range(256), size=3))
 	colour = "rgb(" + str(color[0]) + "," + str(color[1]) + "," + str(color[2]) + ")"
+	members = ctx.guild.members
+	member_colour = ctx.author.colour
 	hour_var = ctx.created_at.hour
 	minute_var = ctx.created_at.minute
 	if hour_var < 10:
@@ -517,6 +526,12 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 					if member.id == int(ctx.content[start+3:end]):
 						user_name = member.display_name
 				ctx.content = ctx.content[:start] + "<i class=\"tag tag_member_name\">@" + user_name + "</i>" + ctx.content[end+1:]
+			elif ctx.content[start+2] == "&":
+				end = start + 21
+				guild = ctx.guild
+				role = guild.get_role(int(ctx.content[start+3:end]))
+				role_name = role.name
+				ctx.content = ctx.content[:start] + "<i class=\"tag tag_role_name\">@" + role_name + "</i>" + ctx.content[end+1:]
 			else:
 				end = start + 20
 				for member in members:
@@ -562,7 +577,7 @@ async def on_message(ctx): 				# triggers every time a new message is sent in a 
 				end = start + 1
 				ctx.content = ctx.content[:start] + "</em>" + ctx.content[end:]
 				ast_3_check = 0
-	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,colour,str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(date),bot.user.display_name]
+	message_array = [str(ctx.author.id),str(ctx.id),ctx.author.display_name,str(member_colour),str(ctx.author.avatar_url),ctx.content,channel_id,message_attachments,scroll,str(date),bot.user.display_name]
 
 	eel.new_message(message_array)
 
