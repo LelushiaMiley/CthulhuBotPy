@@ -26,6 +26,7 @@ function createWindow () {
     frame: false,
     backgroundColor: '#FFF',
     webPreferences: {
+      spellcheck: true,
       nodeIntegration: true,
       preload: path.join(__dirname, 'web/preload.js'),
       enableRemoteModule: true
