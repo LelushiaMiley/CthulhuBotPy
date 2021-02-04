@@ -84,4 +84,4 @@ async def on_message(ctx): # triggers every time a new message is sent in a chan
 			# os.remove(os.path.join(msg_id + "/", "output.gif"))
 			# os.rmdir(msg_id)
 
-bot.run("NzUwNzU3MDAwMjk5OTM3OTM0.X0_K8Q.MkRx-H5p9mvcKe9hMkxp4U4itjA") # bot's token; will be omitted from GitHub pushes
+bot.run("") # bot's token; will be omitted from GitHub pushes
