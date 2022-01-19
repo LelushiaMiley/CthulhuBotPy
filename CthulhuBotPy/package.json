@@ -13,6 +13,6 @@
   "author": "Lelushia Miley",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^7.2.4"
+    "electron": "^11.5.0"
   }
 }
